@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.glassfish.jersey.media:jersey-media-moxy:unknown">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-moxy/unknown/jersey-media-moxy-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-moxy/unknown/jersey-media-moxy-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/glassfish/jersey/media/jersey-media-moxy/unknown/jersey-media-moxy-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

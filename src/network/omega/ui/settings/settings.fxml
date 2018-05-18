@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Hyperlink?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<AnchorPane id="AnchorPane" prefHeight="354.0" prefWidth="400.0" styleClass="custom-pane" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.settings.SettingsController">
+   <children>
+      <VBox prefHeight="354.0" prefWidth="400.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <!--<JFXTextField fx:id="nDaysWithoutFine" labelFloat="true" promptText="No.of days to keep book without fine">-->
+               <!--<VBox.margin>-->
+                  <!--<Insets bottom="10.0" left="10.0" right="10.0" top="25.0" />-->
+               <!--</VBox.margin>-->
+            <!--</JFXTextField>-->
+            <!--<JFXTextField fx:id="finePerDay" labelFloat="true" promptText="Fine per day">-->
+               <!--<VBox.margin>-->
+                  <!--<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+               <!--</VBox.margin>-->
+            <!--</JFXTextField>-->
+            <!--<JFXTextField fx:id="username" labelFloat="true" promptText="username">-->
+               <!--<VBox.margin>-->
+                  <!--<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+               <!--</VBox.margin>-->
+            <!--</JFXTextField>-->
+            <!--<JFXPasswordField fx:id="password" labelFloat="true" promptText="password">-->
+               <!--<VBox.margin>-->
+                  <!--<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+               <!--</VBox.margin>-->
+            <!--</JFXPasswordField>-->
+            <!--<HBox alignment="CENTER" prefHeight="43.0" prefWidth="334.0" spacing="25.0">-->
+               <!--<children>-->
+                  <!--<JFXButton onAction="#handleSaveButtonAction" prefHeight="100.0" prefWidth="100.0" text="Save" />-->
+                  <!--<JFXButton onAction="#handleCancelButtonAction" prefHeight="100.0" prefWidth="100.0" text="Cancel" />-->
+               <!--</children>-->
+               <!--<VBox.margin>-->
+                  <!--<Insets top="20.0" />-->
+               <!--</VBox.margin>-->
+            <!--</HBox>-->
+
+         </children>
+         <padding>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </padding>
+      </VBox>
+       <JFXTextArea fx:id="importantMessage" layoutX="10.0" layoutY="12.0" prefHeight="181.0" prefWidth="401.0" text="IMPORTANT: If you forget your pass phrase and username you will be unable to access your account, we cannot reset or restore your password! Make sure you memorize or write down your password or save the locally stored file with those link to the file on local OS" visible="false" />
+       <Label layoutX="26.0" layoutY="17.0" prefHeight="191.0" prefWidth="379.0" text="Please make sure you backup your&#10;password.dat file. You won't be&#10;able to recover your password and&#10;username once lost." textFill="#eeeeee">
+           <font>
+               <Font name="System Bold" size="22.0" />
+           </font>
+       </Label>
+       <Hyperlink layoutX="20.0" layoutY="217.0" onAction="#handleOpenPassLocationAction" text="Click to open password.dat file location" textFill="#2e8cff">
+           <opaqueInsets>
+               <Insets />
+           </opaqueInsets>
+           <font>
+               <Font size="19.0" />
+           </font>
+       </Hyperlink>
+       <FontAwesomeIconView glyphName="KEY" layoutX="363.0" layoutY="245.0" size="25" />
+   </children>
+</AnchorPane>

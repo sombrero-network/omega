@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1000.0" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.MainController">
+   <children>
+      <JFXDrawer fx:id="drawer" defaultDrawerSize="150.0" resizableOnDrag="true" resizeContent="true" styleClass="jfx-drawer" />
+      <AnchorPane fx:id="rootAnchorPane" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+               <children>
+                  <JFXTabPane fx:id="mainTabPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab fx:id="marketTab" text="Market">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                     <Label layoutY="10.0" layoutX="10.0" fx:id="testJsonContainer" text="....." textFill="#eeeeee">
+                                         <font>
+                                             <Font size="15.0" />
+                                         </font>
+                                     </Label>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab fx:id="providedTab" text="Provided Resources">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                         <Tab fx:id="consumedTab" text="Consumed Resources">
+                             <content>
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                     <children>
+
+                                     </children>
+                                 </AnchorPane>
+                             </content>
+                         </Tab>
+                     </tabs>
+                  </JFXTabPane>
+                  <JFXHamburger fx:id="hamburger" styleClass="jfx-hamburger-icon" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="75.0" />
+               </children>
+            </AnchorPane>
+            <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleMenuSettings" text="Settings" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleMenuClose" text="Exit" />
+                  </items>
+                </Menu>
+                <!--<Menu mnemonicParsing="false" text="Add">-->
+                  <!--<items>-->
+                    <!--<MenuItem mnemonicParsing="false" onAction="#handleMenuAddBook" text="Add Book" />-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleMenuAddMember" text="Add Member" />-->
+                  <!--</items>-->
+                <!--</Menu>-->
+                  <!--<Menu mnemonicParsing="false" text="View">-->
+                     <!--<items>-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleMenuViewBook" text="Book List" />-->
+                        <!--<MenuItem mnemonicParsing="false" text="Member List" />-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleIssuedList" text="Issued Book List" />-->
+                        <!--<MenuItem mnemonicParsing="false" onAction="#handleMenuFullScreen" text="Full Screen" />-->
+                     <!--</items>-->
+                  <!--</Menu>-->
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleAboutMenu" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

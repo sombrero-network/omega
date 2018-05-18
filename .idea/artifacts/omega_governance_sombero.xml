@@ -1,0 +1,33 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="omega-governance-sombero">
+    <output-path>$PROJECT_DIR$/out/artifacts/omega_governance_sombero</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="network.omega.ui.main.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="linuxIcon" value="$PROJECT_DIR$/src/resources/icon.png" />
+            <option name="macIcon" value="$PROJECT_DIR$/src/resources/icon.png" />
+            <option name="windowsIcon" value="$PROJECT_DIR$/src/resources/icon.png" />
+          </JavaFxApplicationIcons>
+        </option>
+        <option name="nativeBundle" value="all" />
+        <option name="paramFile" value="-Dprism.order=sw" />
+        <option name="title" value="Omega Governance" />
+        <option name="vendor" value="OMEGA" />
+        <option name="version" value="1.0.0d" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="omega_governance_sombero.jar">
+        <element id="module-output" name="omega-governance-sombero" />
+        <element id="file-copy" path="$MAVEN_REPOSITORY$/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" />
+        <element id="library" level="project" name="Maven: com.github.dhorions:boxable:1.5" />
+        <element id="library" level="project" name="Maven: com.google.code.findbugs:jsr305:2.0.1" />
+        <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.8.4" />
+      </element>
+    </root>
+  </artifact>
+</component>

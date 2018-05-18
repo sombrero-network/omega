@@ -1,0 +1,3 @@
+1. make sure artifact is configured to include all jar dependencies
+https://stackoverflow.com/questions/33285108/error-invoking-method-failed-to-launch-jvm
+2. add put omega-governance-sombero.cfg file into \out\artifacts\omega_governance_sombero\bundles\omega-governance-sombero\app\omega-governance-sombero.cfg ; that adds JVMOptions to exe launcher

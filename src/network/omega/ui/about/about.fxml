@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="326.0" prefWidth="548.0" styleClass="custom-pane" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.about.AboutController">
+   <children>
+      <ImageView fitHeight="154.0" layoutX="66.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../resources/icon.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="53.0" layoutY="214.0" styleClass="about-text" text="OMEGA aims to be the world's first decentralized &#10; platform for distributed, composable web services, &#10;workers and other programmatic agents." textAlignment="CENTER" textFill="#eeeeee">
+         <font>
+            <Font size="19.0" />
+         </font>
+      </Label>
+      <VBox layoutX="242.0" layoutY="19.0" prefHeight="175.0" prefWidth="230.0" spacing="5.0">
+         <children>
+            <JFXButton onAction="#loadLink1" prefHeight="40.0" prefWidth="269.0" styleClass="about-button" text="Github" />
+            <JFXButton onAction="#loadLink2" prefHeight="40.0" prefWidth="269.0" styleClass="about-button" text="Website" />
+            <JFXButton onAction="#loadLink3" prefHeight="40.0" prefWidth="269.0" styleClass="about-button" text="Discord" />
+            <JFXButton onAction="#loadLink4" prefHeight="40.0" prefWidth="269.0" styleClass="about-button" text="Sombrero Github" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

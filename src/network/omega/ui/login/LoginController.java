@@ -70,7 +70,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            preference = Preferences.getPreferences();
+            //preference = Preferences.getPreferences();
             nodeConnection = NodeConnection.getInstance();
             nodeConnection.addNodeUrl("wss://testnet.sombrero.network/ws");
 
@@ -113,7 +113,7 @@ public class LoginController implements Initializable {
 //          the locally stored file with those <link to the file on local OS>
 
         //prevent typing of invalid character
-        if (username.getText().toLowerCase().matches("[a-z0-9\\.\\-]+") && username.getText().length() >= 3) {
+        if (username.getText().toLowerCase().matches("[a-z]+(?:[a-z0-9\\-\\.])*[a-z0-9]{3,}") && username.getText().length() >= 3) {
             // check if user exists on the network from wss://
             try {
                 nodeConnection.connect(null, null, false, mErrorListener);
@@ -133,7 +133,8 @@ public class LoginController implements Initializable {
                         }
 
                         //if username is correct for registration we can call the faucet
-                        if(RegisterUsingFaucet.register(username.getText().toLowerCase())){
+                        String registrationCallResult = RegisterUsingFaucet.register(username.getText().toLowerCase());
+                        if(registrationCallResult == null){
                             //on success username validation before faucet call
                             username.getStyleClass().remove("wrong-credentials");
                             username.resetValidation();
@@ -145,7 +146,7 @@ public class LoginController implements Initializable {
 
                         }else{
                             Platform.runLater(() -> {
-                                updateErrorMessage("Currently no new registrations \nare possible.",true,true, true);
+                                updateErrorMessage(registrationCallResult,true,true, true);
                             });
                         }
                     }
@@ -160,9 +161,8 @@ public class LoginController implements Initializable {
             }
         } else {
             Platform.runLater(() -> {
-                updateErrorMessage("Please enter a valid username.\n" +
-                        "Can contain: 'a-z' , 0-9, '.' and '-' characters.\n" +
-                        "Must be 3+ characters long.",true,true, true);
+                updateErrorMessage(
+                        RegisterUsingFaucet.USERNAME_DOESNT_MATCH_VALIDATION_REGEX,true,true, true);
             });
         }
 

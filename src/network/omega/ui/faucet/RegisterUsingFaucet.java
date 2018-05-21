@@ -21,10 +21,11 @@ public class RegisterUsingFaucet {
     public final static String UNKNOWN_FAUCET_ERROR = "Registration is not possible\nat the moment.";
     public final static String PREMIUM_USERNAME_REG_NOT_ALLOWED_ON_FAUCET = "Premium names registration is not\n" +
             "allowed. Please include '0-9', '-' or '.'\n" +
-            "character in your name";
-    public final static String USERNAME_DOESNT_MATCH_VALIDATION_REGEX = "Possible chars: 'a-z' , 0-9, '.' and '-'.\n" +
-            "Must start/end with: 'a-z' , 0-9.\n" +
-            "Must be 3+ characters long.";
+            "character in your name.";
+    public final static String USERNAME_DOESNT_MATCH_VALIDATION_REGEX = "Possible chars: 'a-z' , 0-9, '.' and '-'\n" +
+            "Must start with: 'a-z'\n" +
+            "Must end with '0-9'\n" +
+            "Must be 3+ characters long";
 
     public static void main(String[] args) {
         RegisterUsingFaucet.register("u-17");
@@ -124,6 +125,7 @@ public class RegisterUsingFaucet {
                             }
                         }
                     }else{
+                        System.out.println(obj.toString());
                         client.close();
                         return UNKNOWN_FAUCET_ERROR;
                     }

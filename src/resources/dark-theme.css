@@ -1,8 +1,3 @@
-/* 
-    Created on : 11 Nov, 2017, 4:42:53 AM
-    Author     : afsal villan
-*/
-
 * {
     -fx-primary : #2A2E37;
     -fx-secondary : #FFFF8D;
@@ -10,10 +5,12 @@
     -fx-blue: #1976D2;
     -fx-red: #FF0000;
     -fx-green:#2E7D32;
+    -fx-font-family: 'SansSerif';
 }
 
 .root{
     -fx-background-color: -fx-primary;
+    -fx-font-family: 'SansSerif';
 }
 
 .glyph-icon
@@ -28,6 +25,7 @@
     -fx-border-radius: 20px;
     -fx-background-radius: 20px;
     -fx-font-size: 13pt;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .button:hover{
@@ -42,6 +40,7 @@
     -fx-font-size : 13pt;
     -jfx-focus-color: -fx-secondary;
     -fx-text-fill: derive(-fx-secondary, 20%);
+    -fx-font-family: 'SansSerif Bold';
 }
 
 /*Login Screen Specific*/
@@ -55,11 +54,27 @@
 
 /*Main Screen CSS Styling starts here*/
 
+.label {
+    -fx-font-family: 'SansSerif Bold';
+    -fx-font-size : 17pt;
+}
+
+.errorMessage {
+    -fx-font-family: 'SansSerif Bold';
+    -fx-font-size : 12pt;
+}
+
+.hyperlink {
+    -fx-font-family: 'SansSerif Bold';
+    -fx-font-size : 14pt;
+}
+
 /*TablPane styling*/
 .tab{
     -fx-background-color: -fx-primary;
     -fx-pref-width : 350;
     -fx-pref-height : 60;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .tab-header-background{
@@ -72,9 +87,21 @@
     -fx-background-color: -fx-primary;
 }
 
+.menu-bar .label{
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 10pt;
+}
+
+.menu-item .label{
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 10pt;
+}
+
 .context-menu
 {
     -fx-background-color:  derive(-fx-primary, 20%);
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 14pt;
 }
 
 /*Hamburger Styling*/
@@ -95,16 +122,23 @@
     -fx-background-color: derive(-fx-primary, 10%);
     -fx-background-radius: 0px;
     -fx-border-radius: 0px;
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 14pt;
 }
 .toolbar-button:hover
 {
     -fx-background-color: -fx-secondary;
     -fx-text-fill: -fx-primary;
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 14pt;
 }
 
 .toolbar-button:hover .glyph-icon
 {
     -fx-fill: -fx-primary;
+    -fx-font-family: 'SansSerif';
+    -fx-font-size : 14pt;
+
 }
 
 /*Text styling*/
@@ -113,6 +147,7 @@
     -fx-fill: -fx-secondary;
     -fx-font-size: 14pt;
     -fx-text-alignment: center;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .submission-container{
@@ -125,12 +160,14 @@
     -fx-text-fill: white;
     -fx-border-radius: 1px;
     -fx-background-radius: 3px;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .dialog-button:hover{
     -fx-background-color: -fx-green;
     -fx-border-color: derive(-fx-green, -20%);
     -fx-text-fill: white;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .jfx-layout-actions
@@ -155,10 +192,12 @@
 /*About window*/
 .about-text{
     -fx-fill: -fx-secondary;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 .about-button{
     -fx-border-color: transparent;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 /*Custom window background*/
@@ -251,6 +290,7 @@
 .jfx-layout-heading .label
 {
     -fx-text-fill: white;
+    -fx-font-family: 'SansSerif Bold';
 }
 .jfx-layout-body, .jfx-layout-actions{
     -fx-background-color: -fx-primary;   
@@ -259,6 +299,7 @@
 {
     -fx-text-fill: white;
     -fx-padding: 20px 0 0 0;
+    -fx-font-family: 'SansSerif Bold';
 }
 
 
@@ -268,4 +309,5 @@
     -fx-background-radius: 5px;
     -fx-fill: derive(blue, 80%);
     -fx-cursor: hand;
+    -fx-font-family: 'SansSerif Bold';
 }

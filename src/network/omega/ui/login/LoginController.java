@@ -113,7 +113,7 @@ public class LoginController implements Initializable {
 //          the locally stored file with those <link to the file on local OS>
 
         //prevent typing of invalid character
-        if (username.getText().toLowerCase().matches("[a-z]+(?:[a-z0-9\\-\\.])*[a-z0-9]{3,}") && username.getText().length() >= 3) {
+        if (username.getText().toLowerCase().matches("[a-z]+(?:[a-z0-9\\-\\.])*[a-z0-9]") && username.getText().length() >= 3) {
             // check if user exists on the network from wss://
             try {
                 nodeConnection.connect(null, null, false, mErrorListener);

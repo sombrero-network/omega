@@ -17,24 +17,28 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ManageLocalStorage {
-    private Preferences prefs;
-
+    public static String username;
+    public static String password;
     static String userHome = System.getProperty("user.home");
     static Path applicationDir = Paths.get(userHome, ".omegagovernance");
     static Desktop ds;
-
-    public static String username;
-    public static String password;
+    private Preferences prefs;
 
     public static void openPasswordFileFolder(){
-        if(Desktop.isDesktopSupported()){
-            ds = Desktop.getDesktop();
-            try {
-                //Path passwordFile = applicationDir.resolve("password.dat");
-                ds.open(applicationDir.toFile());
-            } catch (IOException e) {
-                e.printStackTrace();
+
+        try {
+            if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+                Runtime.getRuntime().exec("nautilus " + applicationDir.toFile());
+            }else {
+                if (Desktop.isDesktopSupported()) {
+                    ds = Desktop.getDesktop();
+
+                        //Path passwordFile = applicationDir.resolve("password.dat");
+                        ds.open(applicationDir.toFile());
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -80,7 +84,14 @@ public class ManageLocalStorage {
         }catch (IOException e){};
     }
 
+    public static void main(String[] args) {
+        ManageLocalStorage test = new ManageLocalStorage();
+        KeysGenerator kg = KeysGenerator.generate("u-18", RandomPassword.newPassword(70));
+        test.storePasswordFile(kg);
+        //test.setPreference();
+        //System.out.println(test.prefs.absolutePath());
 
+    }
 
     public void setPreference() {
         // This will define a node in which the preferences can be stored
@@ -104,15 +115,6 @@ public class ManageLocalStorage {
 
         // Delete the preference settings for the first value
         prefs.remove(ID1);
-
-    }
-
-    public static void main(String[] args) {
-        ManageLocalStorage test = new ManageLocalStorage();
-        KeysGenerator kg = KeysGenerator.generate("u-18", RandomPassword.newPassword(70));
-        test.storePasswordFile(kg);
-        //test.setPreference();
-        //System.out.println(test.prefs.absolutePath());
 
     }
 }

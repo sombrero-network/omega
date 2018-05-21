@@ -193,8 +193,10 @@ public class LoginController implements Initializable {
         try {
             Parent parent = FXMLLoader.load(getClass().getResource("/library/assistant/ui/main/main.fxml"));
             Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle("Library Assistant");
-            stage.setScene(new Scene(parent));
+            stage.setTitle("Omega governance");
+            Scene scene = new Scene(parent);
+            LibraryAssistantUtil.setSceneStyle(scene, this);
+            stage.setScene(scene);
             stage.show();
             LibraryAssistantUtil.setStageIcon(stage);
         } catch (IOException ex) {
@@ -230,6 +232,7 @@ public class LoginController implements Initializable {
         try {
             Parent secondView = (AnchorPane) FXMLLoader.load(getClass().getResource("/network/omega/ui/login/passwordBackupNotifiy.fxml"));
             Scene newScene = new Scene(secondView);
+            LibraryAssistantUtil.setSceneStyle(newScene, this);
             newScene.setFill(Main.BACKGROUND_FILL);
             Stage currentStage = (Stage)rootPane.getScene().getWindow();
             currentStage.setScene(newScene);

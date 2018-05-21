@@ -56,17 +56,17 @@
 
 .label {
     -fx-font-family: 'SansSerif Bold';
-    -fx-font-size : 17pt;
+    -fx-font-size : 14pt;
 }
 
 .errorMessage {
     -fx-font-family: 'SansSerif Bold';
-    -fx-font-size : 12pt;
+    -fx-font-size : 11pt;
 }
 
 .hyperlink {
     -fx-font-family: 'SansSerif Bold';
-    -fx-font-size : 14pt;
+    -fx-font-size : 12pt;
 }
 
 /*TablPane styling*/

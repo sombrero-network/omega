@@ -9,7 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="354.0" prefWidth="400.0" styleClass="custom-pane" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.settings.SettingsController">
+        <!--stylesheets="@../../../../resources/dark-theme.css"-->
+<AnchorPane id="AnchorPane" prefHeight="354.0" prefWidth="400.0" styleClass="custom-pane"
+            xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.settings.SettingsController">
    <children>
       <VBox prefHeight="354.0" prefWidth="400.0" spacing="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

@@ -3,7 +3,9 @@
 <?import com.jfoenix.controls.*?>
 <?import de.jensd.fx.glyphs.fontawesome.*?>
 <?import javafx.scene.layout.VBox?>
-<VBox prefHeight="445.0" prefWidth="154.0" styleClass="toolbar-container" stylesheets="@../../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.toolbar.ToolbarController">
+
+<!--stylesheets="@../../../../resources/dark-theme.css"-->
+<VBox fx:id="rootVBox" prefHeight="445.0" prefWidth="154.0" styleClass="toolbar-container" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.toolbar.ToolbarController">
    <children>
       <JFXButton contentDisplay="TOP" mnemonicParsing="false" onAction="#sellResource" prefHeight="400.0" prefWidth="160.0" styleClass="toolbar-button" text="Provide" textAlignment="CENTER">
          <graphic>

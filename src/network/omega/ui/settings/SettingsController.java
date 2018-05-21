@@ -25,8 +25,9 @@ public class SettingsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         //initDefaultValues();
-    }    
-    
+    }
+
+
 
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {

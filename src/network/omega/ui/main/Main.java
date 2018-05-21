@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import library.assistant.database.DatabaseHandler;
+import library.assistant.ui.addbook.LibraryAssistant;
 import library.assistant.util.LibraryAssistantUtil;
 import network.omega.ui.login.LoginController;
 import network.omega.ui.preferences.ManageLocalStorage;
@@ -17,6 +18,7 @@ import java.awt.*;
 public class Main extends Application {
 
     public static Color BACKGROUND_FILL = Color.valueOf("#2A2E37");
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -29,6 +31,7 @@ public class Main extends Application {
             stage1.setTitle("OMEGA Governance");
             Scene scene = new Scene(parent);
             scene.setFill(Main.BACKGROUND_FILL);
+            LibraryAssistantUtil.setSceneStyle(scene, this);
             stage1.setScene(scene);
             stage1.show();
             LibraryAssistantUtil.setStageIcon(stage1);
@@ -37,15 +40,12 @@ public class Main extends Application {
 
         // Omega graphics :
         // https://github.com/omegacoinnetwork/omegacoin/tree/master/src/qt/res/icons
+
+        //load login form
         Parent root = FXMLLoader.load(getClass().getResource("/network/omega/ui/login/login.fxml"));
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/network/omega/ui/login/login.fxml"));
-//        Parent root = loader.load();
-//        LoginController controller = loader.getController();
-//        Example updateThread = new Example(controller);
-
-
         Scene scene = new Scene(root);
         scene.setFill(BACKGROUND_FILL);
+        LibraryAssistantUtil.setSceneStyle(scene, this);
         stage.setScene(scene);
         stage.show();
         stage.setTitle("OMEGA Governance");

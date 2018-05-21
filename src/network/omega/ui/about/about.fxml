@@ -8,7 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="326.0" prefWidth="548.0" styleClass="custom-pane" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.about.AboutController">
+<!--stylesheets="@../../../../resources/dark-theme.css"-->
+<!--stylesheets="@../../../../resources/dark-theme-linux.css"-->
+<AnchorPane fx:id="rootPane" prefHeight="326.0" prefWidth="548.0" styleClass="custom-pane" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.about.AboutController">
    <children>
       <ImageView fitHeight="154.0" layoutX="66.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
          <image>

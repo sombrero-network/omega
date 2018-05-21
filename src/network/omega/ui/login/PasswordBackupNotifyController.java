@@ -64,6 +64,7 @@ public class PasswordBackupNotifyController implements Initializable {
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("OMEGA Governance");
             Scene scene = new Scene(parent);
+            LibraryAssistantUtil.setSceneStyle(scene, this);
             scene.setFill(Main.BACKGROUND_FILL);
             stage.setScene(scene);
             stage.show();

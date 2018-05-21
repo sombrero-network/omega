@@ -144,6 +144,7 @@ public class MainController implements Initializable, BookReturnCallback {
     public void initialize(URL url, ResourceBundle rb) {
         //databaseHandler = DatabaseHandler.getInstance();
 
+
         initDrawer();
         //initGraphs();
 

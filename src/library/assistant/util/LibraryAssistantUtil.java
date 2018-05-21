@@ -36,6 +36,18 @@ public class LibraryAssistantUtil {
         stage.getIcons().add(new Image(ICON_IMAGE_LOC));
     }
 
+    public static void setSceneStyle(Scene scene, Object obj){
+        URL url = null;
+        if(System.getProperty("os.name").toLowerCase().contains("linux")){
+            url = obj.getClass().getResource("/resources/dark-theme-linux.css");
+        }else{
+            // stylesheet fro mac and win
+            url = obj.getClass().getResource("/resources/dark-theme.css");
+        }
+        String styleSheetPath = url.toExternalForm();
+        scene.getStylesheets().add(styleSheetPath);
+    }
+
     public static Object loadWindow(URL loc, String title, Stage parentStage) {
         Object controller = null;
         try {
@@ -49,7 +61,9 @@ public class LibraryAssistantUtil {
                 stage = new Stage(StageStyle.DECORATED);
             }
             stage.setTitle(title);
-            stage.setScene(new Scene(parent));
+            Scene scn = new Scene(parent);
+            setSceneStyle(scn, MainController.class);
+            stage.setScene(scn);
             stage.show();
             setStageIcon(stage);
         } catch (IOException ex) {

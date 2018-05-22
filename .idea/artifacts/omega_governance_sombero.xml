@@ -13,7 +13,7 @@
             <option name="windowsIcon" value="$PROJECT_DIR$/src/resources/icon.png" />
           </JavaFxApplicationIcons>
         </option>
-        <option name="nativeBundle" value="all" />
+        <option name="nativeBundle" value="deb" />
         <option name="paramFile" value="-Dprism.order=sw" />
         <option name="title" value="Omega Governance" />
         <option name="vendor" value="OMEGA" />

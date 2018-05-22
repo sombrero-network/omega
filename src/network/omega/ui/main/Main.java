@@ -52,9 +52,9 @@ public class Main extends Application {
 
         LibraryAssistantUtil.setStageIcon(stage);
         
-        new Thread(() -> {
-            DatabaseHandler.getInstance();
-        }).start();
+//        new Thread(() -> {
+//            DatabaseHandler.getInstance();
+//        }).start();
     }
 
 

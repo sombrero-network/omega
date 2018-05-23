@@ -42,6 +42,7 @@ public class ListAssets extends BaseGrapheneHandler {
     private String lowerBound;
     private int limit;
     private int requestCounter = 0;
+    private final WitnessResponseListener mListener;
 
     private boolean mOneTime;
 
@@ -62,6 +63,7 @@ public class ListAssets extends BaseGrapheneHandler {
         this.lowerBound = lowerBoundSymbol;
         this.limit = limit;
         this.mOneTime = oneTime;
+        this.mListener = listener;
     }
 
     /**
@@ -122,7 +124,7 @@ public class ListAssets extends BaseGrapheneHandler {
                 if(mOneTime){
                     websocket.disconnect();
                 }
-            }else if(this.assets.size() == this.limit){
+            }else if(this.assets.size() <= this.limit){
                 // We already have the required amount of assets
                 witnessResponse.result = this.assets;
                 mListener.onSuccess(witnessResponse);

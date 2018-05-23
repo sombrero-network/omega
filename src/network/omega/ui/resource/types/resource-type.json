@@ -1,0 +1,41 @@
+{
+  //description of resource
+  "de" :{
+    //install OS
+    "o":"ubuntu 16.04x64",
+    //installed packages list noticable
+    "i":"gcc,make,gnome,gtk,omega"
+  },
+  //cpu
+  "c": {
+    //cores number
+    "c": "1",
+    //1 core benchmark
+    "b": "1234"
+  },
+  //ram
+  "r": {
+    //size
+    "s": "512MB",
+    //minimal speed
+    "ms": "5000MBs"
+  },
+  //disk
+  "d": {
+    //size
+    "s": "15GB",
+    //minimal small files read/write speed
+    "msfs": "50MBs/45Mbs",
+    //minimal big files read/write speed
+    "mbfs": "100MBs/80Mbs"
+  },
+  //host system requirements
+  "h": {
+    //free disk space
+    "s": "30GB",
+    //minimal free ram
+    "r": "1GB",
+    //minimal cpu cores number
+    "c": "2"
+  }
+}

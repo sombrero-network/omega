@@ -190,13 +190,14 @@ public class SubscriptionMessagesHub extends BaseGrapheneHandler implements Subs
                 subscriptionCounter++;
             }else{
                 WitnessResponse witnessResponse = gson.fromJson(message, WitnessResponse.class);
+                Object a = mHandlerMap.get(new Long(LOGIN_ID));
                 if(witnessResponse.result != null &&
-                        mHandlerMap.get(witnessResponse.id) != null){
+                         a != null){
                     // This is the response to a request that was submitted to the message hub
                     // and whose handler was stored in the "request id" -> "handler" map
-                    BaseGrapheneHandler handler = mHandlerMap.get(witnessResponse.id);
+                    BaseGrapheneHandler handler = mHandlerMap.get(new Long(LOGIN_ID));
                     handler.onTextFrame(websocket, frame);
-                    mHandlerMap.remove(witnessResponse.id);
+                    mHandlerMap.remove(new Long(LOGIN_ID));
                 }else{
                     // If we've already subscribed to all requested subscription channels, we
                     // just proceed to deserialize content.

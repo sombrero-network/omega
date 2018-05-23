@@ -18,6 +18,15 @@
     -fx-fill: -fx-primarytext;
 }
 
+
+/*Buttons styles*/
+.circle-button{
+    -fx-background-color: -fx-secondary;
+    -fx-background-radius: 5px;
+    -fx-font-size: 30pt;
+    -fx-font-family: 'SansSerif Bold';
+}
+
 .button{
     -fx-text-fill: -fx-primarytext;
     -fx-background-color: -fx-primary;
@@ -62,6 +71,11 @@
 .errorMessage {
     -fx-font-family: 'SansSerif Bold';
     -fx-font-size : 11pt;
+}
+
+.detailsMessage {
+    -fx-font-family: 'SansSerif Bold';
+    -fx-font-size : 10pt;
 }
 
 .hyperlink {

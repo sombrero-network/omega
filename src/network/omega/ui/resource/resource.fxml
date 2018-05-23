@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<!--stylesheets="@../../../../resources/dark-theme.css"-->
+
+<StackPane fx:id="rootPane" prefHeight="331.0" prefWidth="498.0" stylesheets="@../../../../resources/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.resource.ResourceController">
+   <children>
+      <AnchorPane id="AnchorPane" fx:id="mainContainer" prefHeight="41.0" prefWidth="498.0" styleClass="custom-pane">
+         <children>
+            <VBox prefHeight="331.0" prefWidth="498.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <JFXTextField fx:id="searchResourceType" labelFloat="true" onKeyTyped="#onSearchResourceInputChange" promptText="Search Resource Type">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="20.0" />
+                     </VBox.margin>
+                  </JFXTextField>
+                   <HBox alignment="CENTER" prefHeight="196.0" prefWidth="468.0" spacing="30.0">
+                       <ListView fx:id="searchResultResources" prefHeight="196.0" prefWidth="147.0" />
+                       <TextArea fx:id="resourceDescription" prefHeight="318.0" prefWidth="252.0" styleClass="detailsMessage" />
+                     <!--<ScrollPane prefHeight="195.0" prefWidth="268.0">-->
+                       <!--<content>-->
+                         <!--<AnchorPane prefHeight="200.0" prefWidth="233.0">-->
+                              <!--<children>-->
+                                 <!---->
+                              <!--</children>-->
+                           <!--</AnchorPane>-->
+                       <!--</content>-->
+                     <!--</ScrollPane>-->
+                       
+                   </HBox>
+
+                  <HBox alignment="CENTER" prefHeight="31.0" prefWidth="498.0" spacing="30.0">
+                     <children>
+                         <JFXButton fx:id="cancelButton" onAction="#cancel" prefHeight="66.0" prefWidth="100.0" text="Cancel" />
+                         <JFXButton fx:id="saveButton" onAction="#addResource" prefHeight="66.0" prefWidth="100.0" text="Add" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                     <!--<padding>-->
+                        <!--<Insets bottom="20.0" />-->
+                     <!--</padding>-->
+                  </HBox>
+               </children>
+               <!--<padding>-->
+                  <!--<Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />-->
+               <!--</padding>-->
+            </VBox>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

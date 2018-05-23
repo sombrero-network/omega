@@ -8,6 +8,7 @@ import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import cy.agorise.graphenej.Asset;
 import cy.agorise.graphenej.UserAccount;
 import cy.agorise.graphenej.api.GetAccountByName;
+import cy.agorise.graphenej.api.ListAssets;
 import cy.agorise.graphenej.api.LookupAccounts;
 import cy.agorise.graphenej.api.android.NodeConnection;
 import cy.agorise.graphenej.errors.RepeatedRequestIdException;
@@ -43,16 +44,14 @@ import library.assistant.ui.issuedlist.IssuedListController;
 import library.assistant.util.LibraryAssistantUtil;
 import network.omega.ui.main.toolbar.ToolbarController;
 import network.omega.ui.preferences.ManageLocalStorage;
+import network.omega.ui.resource.ResourceController;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -591,4 +590,86 @@ public class MainController implements Initializable, BookReturnCallback {
         }
     }
 
+    public HashMap<String, Asset> resourceTypesFetched;
+    ResourceController rc = null;
+    public int openedAddResourceForms = 0;
+    @FXML
+    public void handleAddMyResource(ActionEvent actionEvent) {
+        if(openedAddResourceForms == 0) {
+            rc = (ResourceController) LibraryAssistantUtil.loadWindowClosable(getClass().getResource("/network/omega/ui/resource/resource.fxml"), "Add Resource", null);
+            rc.mc = this;
+
+
+            //cache all resources types in RAM
+            if (!wssIsLocked()) {
+                lockWss();
+                resourceTypesFetched = new HashMap<>();
+                nodeConnection = NodeConnection.getInstance();
+                nodeConnection.addNodeUrl("wss://testnet.sombrero.network/ws");
+                fetchResourceTypes("ubuntu", 100, resourceTypesFetched);
+                rc.resourceTypesFetched = resourceTypesFetched;
+            } else {
+                rc.resourceTypesFetched = resourceTypesFetched;
+                rc.updateTypesList();
+            }
+            openedAddResourceForms++;
+        }
+        rc.toFront();
+    }
+
+    public long MILLIS_TO_PASS_BETWEEN_WSS_CONNECTIONS = 3L * 60L * 1000L; //3 * 60 * 1000 = 3 min
+    public long wssLocked = 0L;
+
+    public void lockWss(){
+        wssLocked = System.currentTimeMillis() + MILLIS_TO_PASS_BETWEEN_WSS_CONNECTIONS;
+    }
+
+    public boolean wssIsLocked(){
+        if(System.currentTimeMillis() < wssLocked){
+            return true;
+        }
+        return false;
+    }
+
+    public void fetchResourceTypes(String searchKeyWord, int limit, HashMap<String, Asset> resourceTypesFetched){
+        System.out.println(searchKeyWord);
+        nodeConnection.connect(null, null, false, mErrorListener);
+        Asset LOWER_BOUND_ASSET = new Asset("1.3.0");
+        try {
+            nodeConnection.addRequestHandler(new ListAssets(LOWER_BOUND_ASSET.getSymbol(),
+                    limit, true, new WitnessResponseListener() {
+                @Override
+                public void onSuccess(WitnessResponse response) {
+                    System.out.println("onSuccess");
+                    List<Asset> assets = (List<Asset>) response.result;
+
+                    if (searchKeyWord != null) {
+                        for (Asset a : assets) {
+                            //System.out.println(a.getSymbol());
+                            if (a.getAssetOptions().getDescription().contains(searchKeyWord)) {
+                                resourceTypesFetched.put(a.getSymbol(), a);
+                            }
+                        }
+                    }else{
+                        for (Asset a : assets) {
+                            resourceTypesFetched.put(a.getSymbol(), a);
+                        }
+                    }
+
+                    //update list initially to show all types
+                    if(rc != null) {
+                        rc.updateTypesList();
+                    }
+
+                }
+
+                @Override
+                public void onError(BaseResponse.Error error) {
+                    System.out.println("onError");
+                }
+            }));
+        } catch (RepeatedRequestIdException e) {
+            e.printStackTrace();
+        }
+    }
 }

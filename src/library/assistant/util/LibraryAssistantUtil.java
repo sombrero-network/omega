@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,10 +22,12 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import library.assistant.alert.AlertMaker;
 import library.assistant.export.pdf.ListToPDF;
 import library.assistant.settings.Preferences;
 import library.assistant.ui.main.MainController;
+import network.omega.ui.resource.ControllerHooks;
 
 public class LibraryAssistantUtil {
 
@@ -69,7 +72,33 @@ public class LibraryAssistantUtil {
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return controller;
+    }
+
+    public static Object loadWindowClosable(URL loc, String title, Stage parentStage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(loc);
+            Parent parent = loader.load();
+            final Object controller = loader.getController();
+            Stage stage = null;
+            if (parentStage != null) {
+                stage = parentStage;
+            } else {
+                stage = new Stage(StageStyle.DECORATED);
+            }
+            stage.setTitle(title);
+            Scene scn = new Scene(parent);
+            setSceneStyle(scn, MainController.class);
+            stage.setScene(scn);
+            stage.setOnCloseRequest(event -> ((ControllerHooks)controller).close());
+            stage.show();
+            setStageIcon(stage);
+            return controller;
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public static Float getFineAmount(int totalDays) {

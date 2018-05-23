@@ -204,15 +204,6 @@ public class LoginController implements Initializable {
         }
     }
 
-
-    private NodeErrorListener mErrorListener = new NodeErrorListener() {
-        @Override
-        public void onError(BaseResponse.Error error) {
-            System.out.println("onError");
-        }
-    };
-
-
     private void fadeOut() {
         FadeTransition ft = new FadeTransition();
         ft.setDuration(Duration.millis(200));
@@ -240,5 +231,10 @@ public class LoginController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    private NodeErrorListener mErrorListener = new NodeErrorListener() {
+        @Override
+        public void onError(BaseResponse.Error error) {
+            System.out.println("onError");
+        }
+    };
 }

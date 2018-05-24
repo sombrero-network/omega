@@ -76,6 +76,7 @@
 .detailsMessage {
     -fx-font-family: 'SansSerif Bold';
     -fx-font-size : 10pt;
+    -fx-font-color : #FFFFFF;
 }
 
 .hyperlink {

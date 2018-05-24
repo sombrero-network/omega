@@ -28,6 +28,7 @@ import library.assistant.export.pdf.ListToPDF;
 import library.assistant.settings.Preferences;
 import library.assistant.ui.main.MainController;
 import network.omega.ui.resource.ControllerHooks;
+import network.omega.ui.resource.ResourceController;
 
 public class LibraryAssistantUtil {
 
@@ -92,6 +93,7 @@ public class LibraryAssistantUtil {
             setSceneStyle(scn, MainController.class);
             stage.setScene(scn);
             stage.setOnCloseRequest(event -> ((ControllerHooks)controller).close());
+            ((ControllerHooks)controller).setStage(stage);
             stage.show();
             setStageIcon(stage);
             return controller;

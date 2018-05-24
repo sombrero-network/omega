@@ -484,6 +484,7 @@ public class MainController implements Initializable, BookReturnCallback {
             VBox toolbar = loader.load();
             drawer.setSidePane(toolbar);
             ToolbarController controller = loader.getController();
+            controller.setParentController(this);
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -598,8 +599,6 @@ public class MainController implements Initializable, BookReturnCallback {
         if(openedAddResourceForms == 0) {
             rc = (ResourceController) LibraryAssistantUtil.loadWindowClosable(getClass().getResource("/network/omega/ui/resource/resource.fxml"), "Add Resource", null);
             rc.mc = this;
-
-
             //cache all resources types in RAM
             if (!wssIsLocked()) {
                 lockWss();

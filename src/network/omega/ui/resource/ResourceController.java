@@ -25,7 +25,11 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import network.omega.ui.main.MainController;
 import oshi.SystemInfo;
+import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.software.os.OSFileStore;
+import oshi.software.os.OperatingSystem;
+import oshi.util.FormatUtil;
 
 import javax.swing.filechooser.FileSystemView;
 import javax.ws.rs.client.Entity;
@@ -70,6 +74,10 @@ public class ResourceController implements Initializable, ControllerHooks {
     private Stage stage = null;
 
     public MainController mc;
+
+    SystemInfo si = new SystemInfo();
+    HardwareAbstractionLayer hal = si.getHardware();
+    OperatingSystem os = si.getOperatingSystem();
 
     protected static NodeConnection nodeConnection;
     public HashMap<String, Asset> resourceTypesFetched;
@@ -128,6 +136,7 @@ public class ResourceController implements Initializable, ControllerHooks {
     }
 
     private List<FileStore> currentDisksList = new ArrayList<>();
+    private List<OSFileStore> currentDisksListMacLin = new ArrayList<>();
 
     private void updateDisksList(ListView disksList) {
         // returns pathnames for files and directory
@@ -138,29 +147,61 @@ public class ResourceController implements Initializable, ControllerHooks {
         // for each pathname in pathname array
         currentDisksList.clear();
         List<String> disks = new ArrayList<>();
-        for (Path root : FileSystems.getDefault().getRootDirectories()) {
-            // prints file and directory paths
-            try {
-                FileStore currentStore = Files.getFileStore(root);
-                long currentStoreFreeSpaceInGB = currentStore.getUsableSpace() / 1024l / 1024l / 1024l;
+
+        if(com.sun.jna.Platform.isWindows()) {
+            for (Path root : FileSystems.getDefault().getRootDirectories()) {
+                // prints file and directory paths
+                try {
+                    FileStore currentStore = Files.getFileStore(root);
+                    long currentStoreFreeSpaceInGB = currentStore.getUsableSpace() / 1024l / 1024l / 1024l;
+                    if (currentStoreFreeSpaceInGB > 10) {
+                        String diskName = "";
+                        if (currentStore.name().contentEquals("")) {
+                            diskName = getRootPath(currentStore).toFile().getAbsolutePath();
+                        } else {
+                            diskName = currentStore.name() +
+                                    " - " + getRootPath(currentStore).toFile().getAbsolutePath();
+                        }
+                        disks.add(diskName + " - " + currentStoreFreeSpaceInGB + " GB Free ");
+                        currentDisksList.add(currentStore);
+                        //System.out.println("Drive Name: " + path);
+                        //System.out.println("Description: " + fsv.getSystemTypeDescription(path));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else{
+            //https://github.com/oshi/oshi/blob/master/oshi-core/src/test/java/oshi/SystemInfoTest.java
+            OSFileStore[] fsArray = os.getFileSystem().getFileStores();
+            for (OSFileStore fs : fsArray) {
+                long usable = fs.getUsableSpace();//
+                long total = fs.getTotalSpace();
+                String mountPoint = fs.getMount();
+                String name = fs.getName();
+                long currentStoreFreeSpaceInGB = fs.getUsableSpace() / 1024l / 1024l / 1024l;
                 if (currentStoreFreeSpaceInGB > 10) {
                     String diskName = "";
-                    if (currentStore.name().contentEquals("")) {
-                        diskName = getRootPath(currentStore).toFile().getAbsolutePath();
+                    if (fs.getName().contentEquals("")) {
+                        diskName = fs.getMount();
                     } else {
-                        diskName = currentStore.name() +
-                                " - " + getRootPath(currentStore).toFile().getAbsolutePath();
+                        diskName = fs.getName() +
+                                " - " + fs.getMount();
                     }
                     disks.add(diskName + " - " + currentStoreFreeSpaceInGB + " GB Free ");
-                    currentDisksList.add(currentStore);
+                    currentDisksListMacLin.add(fs);
                     //System.out.println("Drive Name: " + path);
                     //System.out.println("Description: " + fsv.getSystemTypeDescription(path));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+
+//                System.out.format(
+//                        " %s (%s) [%s] %s of %s free (%.1f%%) is %s "
+//                                + (fs.getLogicalVolume() != null && fs.getLogicalVolume().length() > 0 ? "[%s]" : "%s")
+//                                + " and is mounted at %s%n",
+//                        fs.getName(), fs.getDescription().isEmpty() ? "file system" : fs.getDescription(), fs.getType(),
+//                        FormatUtil.formatBytes(usable), FormatUtil.formatBytes(fs.getTotalSpace()), 100d * usable / total,
+//                        fs.getVolume(), fs.getLogicalVolume(), fs.getMount());
             }
-
-
         }
         disksList.setItems(FXCollections.observableList(disks));
     }
@@ -192,15 +233,36 @@ public class ResourceController implements Initializable, ControllerHooks {
         return null;
     }
 
-    public String diskSizeIsValid(ResourceDescription jsonReq, FileStore currentlySelectedDisk) {
-        try {
-            if (jsonReq.freeDiskRequired <= (currentlySelectedDisk.getUsableSpace() / 1024.0f / 1024.0f / 1024.0f)) {
-                System.out.println("Disk: " + jsonReq.freeDiskRequired + " <= "
-                        +(currentlySelectedDisk.getUsableSpace() / 1024.0f / 1024.0f / 1024.0f));
+    public OSFileStore getCurrentlySelectedDiskMacLin() {
+        int selectedIndex = disksList.getSelectionModel().getSelectedIndex();
+        if (selectedIndex != -1) {
+            OSFileStore currentStore = currentDisksListMacLin.get(selectedIndex);
+            if (currentStore != null) {
+                return currentStore;
+            } else {
                 return null;
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String diskSizeIsValid(ResourceDescription jsonReq, Object currentlySelectedDisk) {
+        if(currentlySelectedDisk instanceof FileStore) {
+            try {
+                if (jsonReq.freeDiskRequired <= (((FileStore)currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f / 1024.0f)) {
+                    System.out.println("Disk: " + jsonReq.freeDiskRequired + " <= "
+                            + (((FileStore)currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f / 1024.0f));
+                    return null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            if (jsonReq.freeDiskRequired <= (((OSFileStore)currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f / 1024.0f)) {
+                System.out.println("Disk: " + jsonReq.freeDiskRequired + " <= "
+                        + (((OSFileStore)currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f / 1024.0f));
+                return null;
+            }
         }
         return jsonReq.freeDiskRequired + " GB of free disk needed";
     }
@@ -239,7 +301,14 @@ public class ResourceController implements Initializable, ControllerHooks {
         if(rd == null){
             result.append("Select the resource type\n");
         }
-        FileStore currentlySelectedDisk = getCurrentlySelectedDisk();
+        Object currentlySelectedDisk = null;
+        if(com.sun.jna.Platform.isWindows()) {
+            currentlySelectedDisk = getCurrentlySelectedDisk();
+        }else{
+            currentlySelectedDisk = getCurrentlySelectedDiskMacLin();
+        }
+
+
         if(currentlySelectedDisk == null){
             result.append("Select the disk\n");
         }

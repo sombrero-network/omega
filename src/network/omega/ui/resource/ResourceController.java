@@ -2,13 +2,9 @@ package network.omega.ui.resource;
 
 import com.jfoenix.controls.JFXTextField;
 import cy.agorise.graphenej.Asset;
-import cy.agorise.graphenej.api.ListAssets;
 import cy.agorise.graphenej.api.android.NodeConnection;
-import cy.agorise.graphenej.errors.RepeatedRequestIdException;
 import cy.agorise.graphenej.interfaces.NodeErrorListener;
-import cy.agorise.graphenej.interfaces.WitnessResponseListener;
 import cy.agorise.graphenej.models.BaseResponse;
-import cy.agorise.graphenej.models.WitnessResponse;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -25,23 +21,14 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import network.omega.ui.main.MainController;
 import oshi.SystemInfo;
-import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
-import oshi.util.FormatUtil;
 
-import javax.swing.filechooser.FileSystemView;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +55,8 @@ public class ResourceController implements Initializable, ControllerHooks {
     @FXML
     private Button saveButton;
 
+    @FXML
+    private Label installedVBoxVersion;
 
     private Tooltip errTooltip = new Tooltip();
 
@@ -78,6 +67,8 @@ public class ResourceController implements Initializable, ControllerHooks {
     SystemInfo si = new SystemInfo();
     HardwareAbstractionLayer hal = si.getHardware();
     OperatingSystem os = si.getOperatingSystem();
+
+    String vBoxInstalledVersion = null;
 
     protected static NodeConnection nodeConnection;
     public HashMap<String, Asset> resourceTypesFetched;
@@ -90,6 +81,13 @@ public class ResourceController implements Initializable, ControllerHooks {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        vBoxInstalledVersion = VBoxManager.getVirtualBoxInstalledVersion(hal);
+        if(vBoxInstalledVersion != null) {
+            installedVBoxVersion.setVisible(true);
+            installedVBoxVersion.setText("VirtualBox v" + vBoxInstalledVersion);
+        }else{
+            installedVBoxVersion.setVisible(false);
+        }
         selectDiskLabel.setText("Select the disk\nto store virtual\nmachine at");
         //update the available disks list to select only one
         updateDisksList(disksList);
@@ -285,7 +283,6 @@ public class ResourceController implements Initializable, ControllerHooks {
         return "Minimum of " + jsonReq.minCPUCoresRequired + " CPU cores needed";
     }
 
-
     public String isValid() {
         StringBuilder result = new StringBuilder();
         Boolean isValid = false;
@@ -298,6 +295,12 @@ public class ResourceController implements Initializable, ControllerHooks {
         HardwareAbstractionLayer hal = si.getHardware();
 
         //do validation
+
+
+        if(vBoxInstalledVersion == null){
+            result.append("Please install VirtualBox v" + VBoxManager.MIN_VBOX_VERSION + " or later\n");
+        }
+
         if(rd == null){
             result.append("Select the resource type\n");
         }

@@ -12,11 +12,12 @@
 <?import javafx.scene.layout.VBox?>
 
 <!--stylesheets="@../../../../resources/dark-theme.css"-->
-<StackPane fx:id="rootPane" prefHeight="410.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.resource.ResourceController">
+
+<StackPane fx:id="rootPane" prefHeight="447.0" prefWidth="498.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.resource.ResourceController">
    <children>
       <AnchorPane id="AnchorPane" fx:id="mainContainer" prefHeight="41.0" prefWidth="498.0" styleClass="custom-pane">
          <children>
-            <VBox prefHeight="404.0" prefWidth="498.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <VBox prefHeight="440.0" prefWidth="498.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <JFXTextField fx:id="searchResourceType" labelFloat="true" onKeyTyped="#onSearchResourceInputChange" promptText="Search Resource Type">
                      <VBox.margin>
@@ -32,6 +33,10 @@
                            <Label fx:id="selectDiskLabel" prefHeight="67.0" prefWidth="96.0" styleClass="detailsMessage" textAlignment="RIGHT" textFill="WHITE" />
                            <ListView fx:id="disksList" prefHeight="67.0" prefWidth="305.0" />
                        </children>
+                   </HBox>
+
+                   <HBox alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="478.0" spacing="10.0">
+                   <Label fx:id="installedVBoxVersion" prefHeight="18.0" prefWidth="147.0" styleClass="detailsMessage" textAlignment="RIGHT" textFill="WHITE" />
                    </HBox>
 
                   <HBox alignment="CENTER" prefHeight="31.0" prefWidth="498.0" spacing="30.0">

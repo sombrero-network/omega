@@ -262,7 +262,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                 return null;
             }
         }
-        return jsonReq.freeDiskRequired + " GB of free disk needed";
+        return jsonReq.freeDiskRequired + " GB of free disk needed\n";
     }
 
     public String ramSizeIsValid(ResourceDescription jsonReq, HardwareAbstractionLayer hal) {
@@ -271,7 +271,7 @@ public class ResourceController implements Initializable, ControllerHooks {
             System.out.println("RAM: " + jsonReq.freeRamRequired + " <= " +availableMemoryGB);
             return null;
         }
-        return jsonReq.freeRamRequired + " GB of free RAM needed";
+        return jsonReq.freeRamRequired + " GB of free RAM needed\n";
     }
 
     public String cpuCoresNumIsValid(ResourceDescription jsonReq, HardwareAbstractionLayer hal) {
@@ -280,7 +280,7 @@ public class ResourceController implements Initializable, ControllerHooks {
             System.out.println("CPU: " + jsonReq.minCPUCoresRequired + " <= " +logicalCores);
             return null;
         }
-        return "Minimum of " + jsonReq.minCPUCoresRequired + " CPU cores needed";
+        return "Minimum of " + jsonReq.minCPUCoresRequired + " CPU cores needed\n";
     }
 
     public String isValid() {

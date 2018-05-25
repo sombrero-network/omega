@@ -56,8 +56,14 @@ public class VBoxManager {
 
     public static String getVirtualBoxInstalledVersion(HardwareAbstractionLayer hal) {
 
-        //linux, mac default paths and windows
+        //linux, mac default paths
         //https://stackoverflow.com/questions/7363391/on-os-x-using-virtualboxs-command-line-interface-how-can-i-instruct-a-vm-to-o
+        //https://websiteforstudents.com/install-virtualbox-latest-on-ubuntu-16-04-lts-17-04-17-10/
+        //sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" >> /etc/apt/sources.list.d/virtualbox.list'
+        //sudo apt-get update
+        //sudo apt-get -y install gcc make linux-headers-$(uname -r) dkms
+        //sudo apt-get install virtualbox-5.2
+        //sudo apt-get remove virtualbox virtualbox-5.1 virtualbox-5.2
         if (com.sun.jna.Platform.isLinux() || com.sun.jna.Platform.isMac()) {
             try {
                 Process p = Runtime.getRuntime().exec("VBoxManage -v");
@@ -70,7 +76,8 @@ public class VBoxManager {
                     return installedVersion;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                System.out.println("VBox is not installed.");
             }
         }
         //win default paths

@@ -315,7 +315,7 @@ public class ResourceController implements Initializable, ControllerHooks {
         if(currentlySelectedDisk == null){
             result.append("Select the disk\n");
         }
-        if(currentlySelectedDisk != null && rd != null) {
+        if(currentlySelectedDisk != null && rd != null && vBoxInstalledVersion != null) {
             //disk check
             String diskSizeIsValid = diskSizeIsValid(rd, currentlySelectedDisk);
             if(diskSizeIsValid != null){

@@ -240,6 +240,7 @@
 
     <build>
         <testSourceDirectory>test</testSourceDirectory>
+        <sourceDirectory>src</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

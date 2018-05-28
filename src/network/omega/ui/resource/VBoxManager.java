@@ -1,5 +1,6 @@
 package network.omega.ui.resource;
 
+import network.omega.ui.main.Main;
 import oshi.hardware.HardwareAbstractionLayer;
 
 import java.io.File;
@@ -81,8 +82,9 @@ public class VBoxManager {
                     return installedVersion;
                 }
             } catch (IOException e) {
-                // e.printStackTrace();
-                System.out.println("VBox is not installed.");
+                e.printStackTrace();
+                //System.out.println("VBox is not installed.");
+                Main.logger.info("VBox is not installed.");
             }
         }
         // win default paths
@@ -122,6 +124,7 @@ public class VBoxManager {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Main.logger.error("IOException", e);
             }
         }
         

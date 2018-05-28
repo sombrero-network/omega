@@ -1,5 +1,7 @@
 package network.omega.ui.faucet;
 
+import network.omega.ui.main.Main;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -30,8 +32,10 @@ public class DumpHttpsCertificates {
             
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            Main.logger.error("IOException", e);
         } catch (IOException e) {
             e.printStackTrace();
+            Main.logger.error("IOException", e);
         }
     }
     
@@ -56,8 +60,10 @@ public class DumpHttpsCertificates {
                 
             } catch (SSLPeerUnverifiedException e) {
                 e.printStackTrace();
+                Main.logger.error("IOException", e);
             } catch (IOException e) {
                 e.printStackTrace();
+                Main.logger.error("IOException", e);
             }
             
         }
@@ -81,6 +87,7 @@ public class DumpHttpsCertificates {
                 
             } catch (IOException e) {
                 e.printStackTrace();
+                Main.logger.error("IOException", e);
             }
             
         }

@@ -1,5 +1,6 @@
 package network.omega.ui.faucet;
 
+import network.omega.ui.main.Main;
 import network.omega.ui.preferences.ManageLocalStorage;
 import network.omega.ui.utils.RandomPassword;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
@@ -130,15 +131,18 @@ public class RegisterUsingFaucet {
                         }
                     } else {
                         System.out.println(obj.toString());
+                        Main.logger.error("Not supported json object: " + obj.toString());
                         client.close();
                         return UNKNOWN_FAUCET_ERROR;
                     }
                 }
             } else {
                 client.close();
+                Main.logger.error("Status response http code 422");
                 return UNKNOWN_FAUCET_ERROR;
             }
         } catch (Exception e) {
+            Main.logger.error("IOException", e);
             e.printStackTrace();
             if (client != null) {
                 client.close();

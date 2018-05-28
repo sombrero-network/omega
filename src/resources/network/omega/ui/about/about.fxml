@@ -14,7 +14,7 @@
    <children>
       <ImageView fitHeight="154.0" layoutX="66.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../../resources/icon.png" />
+            <Image url="@../../../../icon.png" />
          </image>
       </ImageView>
       <Label layoutX="53.0" layoutY="214.0" styleClass="about-text" text="OMEGA aims to be the world's first decentralized &#10; platform for distributed, composable web services, &#10;workers and other programmatic agents." textAlignment="CENTER" textFill="#eeeeee">

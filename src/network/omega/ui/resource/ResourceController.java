@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import network.omega.ui.main.Main;
 import network.omega.ui.main.MainController;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
@@ -99,7 +100,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                 errTooltip.hide();
             }
         });
-        Image image = new Image(getClass().getResourceAsStream("/resources/if_stock_error-next_94134.png"));
+        Image image = new Image(getClass().getResourceAsStream("/if_stock_error-next_94134.png"));
         errTooltip.setGraphic(new ImageView(image));
     }
     
@@ -166,6 +167,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Main.logger.error("IOException", e);
                 }
             }
         } else {
@@ -258,6 +260,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                Main.logger.error("IOException", e);
             }
         } else {
             if (jsonReq.freeDiskRequired <= (((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f

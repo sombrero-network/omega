@@ -7,18 +7,20 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import library.assistant.database.DatabaseHandler;
-import library.assistant.ui.addbook.LibraryAssistant;
 import library.assistant.util.LibraryAssistantUtil;
-import network.omega.ui.login.LoginController;
 import network.omega.ui.preferences.ManageLocalStorage;
+import ch.qos.logback.classic.Logger;
+import network.omega.ui.utils.LoggerUtils;
 
-import java.awt.*;
+import java.util.logging.Level;
 
 public class Main extends Application {
     
     public static Color BACKGROUND_FILL = Color.valueOf("#2A2E37");
-    
+
+    //init logger in user settings folder
+    public static Logger logger = LoggerUtils.createLoggerFor("main", ManageLocalStorage.applicationDir.resolve("omega.log").toFile().getAbsolutePath());
+
     @Override
     public void start(Stage stage) throws Exception {
         
@@ -55,6 +57,7 @@ public class Main extends Application {
         // new Thread(() -> {
         // DatabaseHandler.getInstance();
         // }).start();
+
     }
     
     public static void main(String[] args) {

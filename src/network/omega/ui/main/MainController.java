@@ -1,15 +1,10 @@
 package network.omega.ui.main;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jfoenix.controls.*;
-import com.jfoenix.effects.JFXDepthManager;
 import com.jfoenix.transitions.hamburger.HamburgerSlideCloseTransition;
 import cy.agorise.graphenej.Asset;
-import cy.agorise.graphenej.UserAccount;
 import cy.agorise.graphenej.api.GetAccountByName;
 import cy.agorise.graphenej.api.ListAssets;
-import cy.agorise.graphenej.api.LookupAccounts;
 import cy.agorise.graphenej.api.android.NodeConnection;
 import cy.agorise.graphenej.errors.RepeatedRequestIdException;
 import cy.agorise.graphenej.interfaces.NodeErrorListener;
@@ -141,6 +136,7 @@ public class MainController implements Initializable, BookReturnCallback {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        Main.logger.info("MainController initialized.");
         // databaseHandler = DatabaseHandler.getInstance();
         
         initDrawer();
@@ -178,6 +174,7 @@ public class MainController implements Initializable, BookReturnCallback {
                     }));
         } catch (RepeatedRequestIdException e) {
             e.printStackTrace();
+            Main.logger.error( "IOException", e);
         }
         
     }
@@ -360,6 +357,7 @@ public class MainController implements Initializable, BookReturnCallback {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Main.logger.error( "IOException", e);
         }
         
     }
@@ -698,6 +696,7 @@ public class MainController implements Initializable, BookReturnCallback {
                     }));
         } catch (RepeatedRequestIdException e) {
             e.printStackTrace();
+            Main.logger.error( "IOException", e);
         }
     }
 }

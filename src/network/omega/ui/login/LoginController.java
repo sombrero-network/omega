@@ -239,6 +239,7 @@ public class LoginController implements Initializable {
             currentStage.setScene(newScene);
         } catch (IOException e) {
             e.printStackTrace();
+            Main.logger.error( "IOException", e);
         }
     }
     

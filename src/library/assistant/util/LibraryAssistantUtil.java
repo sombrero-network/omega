@@ -32,7 +32,7 @@ import network.omega.ui.resource.ResourceController;
 
 public class LibraryAssistantUtil {
     
-    public static final String ICON_IMAGE_LOC = "/resources/icon.png";
+    public static final String ICON_IMAGE_LOC = "/icon.png";
     private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     
@@ -43,10 +43,10 @@ public class LibraryAssistantUtil {
     public static void setSceneStyle(Scene scene, Object obj) {
         URL url = null;
         if (System.getProperty("os.name").toLowerCase().contains("linux")) {
-            url = obj.getClass().getResource("/resources/dark-theme-linux.css");
+            url = obj.getClass().getResource("/dark-theme-linux.css");
         } else {
             // stylesheet fro mac and win
-            url = obj.getClass().getResource("/resources/dark-theme.css");
+            url = obj.getClass().getResource("/dark-theme.css");
         }
         String styleSheetPath = url.toExternalForm();
         scene.getStylesheets().add(styleSheetPath);

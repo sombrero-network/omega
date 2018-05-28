@@ -1,6 +1,7 @@
 package network.omega.ui.preferences;
 
 import network.omega.ui.faucet.KeysGenerator;
+import network.omega.ui.main.Main;
 import network.omega.ui.utils.RandomPassword;
 import sun.security.krb5.internal.crypto.Des;
 
@@ -20,7 +21,7 @@ public class ManageLocalStorage {
     public static String username;
     public static String password;
     static String userHome = System.getProperty("user.home");
-    static Path applicationDir = Paths.get(userHome, ".omegagovernance");
+    public static Path applicationDir = Paths.get(userHome, ".omegagovernance");
     static Desktop ds;
     private Preferences prefs;
     
@@ -40,6 +41,7 @@ public class ManageLocalStorage {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Main.logger.error("IOException", e);
         }
     }
     
@@ -51,6 +53,7 @@ public class ManageLocalStorage {
             
         } catch (IOException e) {
             e.printStackTrace();
+            Main.logger.error("IOException", e);
         }
         
         username = list.get(0);
@@ -72,6 +75,7 @@ public class ManageLocalStorage {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            Main.logger.error("IOException", e);
         }
     }
     

@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
     
@@ -30,9 +32,8 @@ public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
     
     @Test
     public void testGetAccountByNameRequest() {
-        String ACCOUNT_NAME = "c-z";
-        String ACCOUNT_PASSWORD = "P5KMdCRs8kmNAMv9zZsFmjiXYvt2J29we7s4td8PHYvwG";
-        nodeConnection.connect(ACCOUNT_NAME, ACCOUNT_PASSWORD, false, mErrorListener);
+        String ACCOUNT_NAME = "u-1";
+        nodeConnection.connect("", "", false, mErrorListener);
         
         System.out.println("Adding GetAccountByName here");
         try {
@@ -50,7 +51,9 @@ public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
         } catch (RepeatedRequestIdException e) {
             System.out.println("RepeatedRequestIdException. Msg: " + e.getMessage());
         }
-        
+
+        Timer timer = new Timer();
+        timer.schedule(releaseTask, 7000);
         try {
             // Holding this thread while we get update notifications
             synchronized (this) {
@@ -81,6 +84,20 @@ public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
         @Override
         public void onError(BaseResponse.Error error) {
             System.out.println("onError");
+        }
+    };
+
+
+    /**
+     * Task that will release the worker thread, effectively terminating this
+     * test
+     */
+    private TimerTask releaseTask = new TimerTask() {
+        @Override public void run() {
+            System.out.println("Releasing lock!");
+            synchronized (SombreroNetworkNodeAPITest.this) {
+                SombreroNetworkNodeAPITest.this.notifyAll();
+            }
         }
     };
 }

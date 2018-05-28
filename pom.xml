@@ -267,7 +267,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <phase>none</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>format</goal>
                         </goals>

@@ -33,10 +33,10 @@ import library.assistant.util.LibraryAssistantUtil;
  * @author afsal villan
  */
 public class IssuedListController implements Initializable {
-
+    
     private ObservableList<IssueInfo> list = FXCollections.observableArrayList();
     private BookReturnCallback callback;
-
+    
     @FXML
     private TableView<IssueInfo> tableView;
     @FXML
@@ -57,13 +57,13 @@ public class IssuedListController implements Initializable {
     private StackPane rootPane;
     @FXML
     private AnchorPane contentPane;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCol();
         loadData();
     }
-
+    
     private void initCol() {
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         bookIDCol.setCellValueFactory(new PropertyValueFactory<>("bookID"));
@@ -74,18 +74,16 @@ public class IssuedListController implements Initializable {
         fineCol.setCellValueFactory(new PropertyValueFactory<>("fine"));
         tableView.setItems(list);
     }
-
+    
     public void setBookReturnCallback(BookReturnCallback callback) {
         this.callback = callback;
     }
-
+    
     private void loadData() {
         list.clear();
         DatabaseHandler handler = DatabaseHandler.getInstance();
         String qu = "SELECT ISSUE.bookID, ISSUE.memberID, ISSUE.issueTime, MEMBER.name, BOOK.title FROM ISSUE\n"
-                + "LEFT OUTER JOIN MEMBER\n"
-                + "ON MEMBER.id = ISSUE.memberID\n"
-                + "LEFT OUTER JOIN BOOK\n"
+                + "LEFT OUTER JOIN MEMBER\n" + "ON MEMBER.id = ISSUE.memberID\n" + "LEFT OUTER JOIN BOOK\n"
                 + "ON BOOK.id = ISSUE.bookID";
         ResultSet rs = handler.execQuery(qu);
         Preferences pref = Preferences.getPreferences();
@@ -98,25 +96,28 @@ public class IssuedListController implements Initializable {
                 String bookTitle = rs.getString("title");
                 Timestamp issueTime = rs.getTimestamp("issueTime");
                 System.out.println("Issued on " + issueTime);
-                Integer days = Math.toIntExact(TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - issueTime.getTime())) + 1;
+                Integer days = Math
+                        .toIntExact(TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - issueTime.getTime())) + 1;
                 Float fine = LibraryAssistantUtil.getFineAmount(days);
-                IssueInfo issueInfo = new IssueInfo(counter, bookID, bookTitle, memberName, LibraryAssistantUtil.formatDateTimeString(new Date(issueTime.getTime())), days, fine);
+                IssueInfo issueInfo = new IssueInfo(counter, bookID, bookTitle, memberName,
+                        LibraryAssistantUtil.formatDateTimeString(new Date(issueTime.getTime())), days, fine);
                 list.add(issueInfo);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
-
+    
     @FXML
     private void handleRefresh(ActionEvent event) {
         loadData();
     }
-
+    
     @FXML
     private void exportAsPDF(ActionEvent event) {
         List<List> printData = new ArrayList<>();
-        String[] headers = {"SI", "BOOK ID", "      BOOK NAME       ", "    HOLDER NAME     ", "ISSUE DATE", "DAYS ELAPSED", "FINE"};
+        String[] headers = { "SI", "BOOK ID", "      BOOK NAME       ", "    HOLDER NAME     ", "ISSUE DATE",
+                        "DAYS ELAPSED", "FINE" };
         printData.add(Arrays.asList(headers));
         for (IssueInfo info : list) {
             List<String> row = new ArrayList<>();
@@ -131,16 +132,16 @@ public class IssuedListController implements Initializable {
         }
         LibraryAssistantUtil.initPDFExprot(rootPane, contentPane, getStage(), printData);
     }
-
+    
     @FXML
     private void closeStage(ActionEvent event) {
         getStage().close();
     }
-
+    
     private Stage getStage() {
         return (Stage) tableView.getScene().getWindow();
     }
-
+    
     @FXML
     private void handleReturn(ActionEvent event) {
         IssueInfo issueInfo = tableView.getSelectionModel().getSelectedItem();
@@ -148,9 +149,9 @@ public class IssuedListController implements Initializable {
             callback.loadBookReturn(issueInfo.getBookID());
         }
     }
-
+    
     public static class IssueInfo {
-
+        
         private final SimpleIntegerProperty id;
         private final SimpleStringProperty bookID;
         private final SimpleStringProperty bookName;
@@ -158,8 +159,9 @@ public class IssuedListController implements Initializable {
         private final SimpleStringProperty dateOfIssue;
         private final SimpleIntegerProperty nDays;
         private final SimpleFloatProperty fine;
-
-        public IssueInfo(int id, String bookID, String bookName, String holderName, String dateOfIssue, Integer nDays, float fine) {
+        
+        public IssueInfo(int id, String bookID, String bookName, String holderName, String dateOfIssue, Integer nDays,
+                float fine) {
             this.id = new SimpleIntegerProperty(id);
             this.bookID = new SimpleStringProperty(bookID);
             this.bookName = new SimpleStringProperty(bookName);
@@ -169,31 +171,31 @@ public class IssuedListController implements Initializable {
             this.fine = new SimpleFloatProperty(fine);
             System.out.println(this.nDays.get());
         }
-
+        
         public Integer getId() {
             return id.get();
         }
-
+        
         public String getBookID() {
             return bookID.get();
         }
-
+        
         public String getBookName() {
             return bookName.get();
         }
-
+        
         public String getHolderName() {
             return holderName.get();
         }
-
+        
         public String getDateOfIssue() {
             return dateOfIssue.get();
         }
-
+        
         public Integer getDays() {
             return nDays.get();
         }
-
+        
         public Float getFine() {
             return fine.get();
         }

@@ -24,22 +24,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PasswordBackupNotifyController implements Initializable {
-
-
+    
     @FXML
     private AnchorPane rootPane;
-
+    
     @FXML
     public void handleOpenPassLocationAction(ActionEvent actionEvent) {
         ManageLocalStorage.openPasswordFileFolder();
     }
-
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         rootPane.setOpacity(0);
         fadeIn();
     }
-
+    
     private void fadeIn() {
         FadeTransition ft = new FadeTransition();
         ft.setDuration(Duration.millis(500));
@@ -53,11 +52,11 @@ public class PasswordBackupNotifyController implements Initializable {
         });
         ft.play();
     }
-
+    
     private void closeStage() {
         ((Stage) rootPane.getScene().getWindow()).close();
     }
-
+    
     void loadMain() {
         try {
             Parent parent = FXMLLoader.load(getClass().getResource("/network/omega/ui/main/main.fxml"));
@@ -73,7 +72,7 @@ public class PasswordBackupNotifyController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void continueAction(ActionEvent actionEvent) {
         closeStage();
         loadMain();

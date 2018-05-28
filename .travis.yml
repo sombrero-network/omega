@@ -1,0 +1,4 @@
+## https://docs.travis-ci.com/user/languages/java/
+language: java
+## https://stackoverflow.com/questions/27749942/whats-the-recipe-for-running-mvn-integration-test-instead-of-mvn-test-with-trav
+script: "mvn verify"

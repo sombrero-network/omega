@@ -19,55 +19,55 @@ import java.util.List;
 
 public class GetRelativeAccountHistoryTest extends BaseApiTest {
     private final String TAG = this.getClass().getName();
-
+    
     private int HISTORICAL_TRANSFER_BATCH_SIZE = 10;
     private final UserAccount bilthon_7 = new UserAccount("1.2.140994");
     private int historicalTransferCount;
-
-    @Test
-    public void testRelativeAccountHistory(){
+    
+    // @Test
+    public void testRelativeAccountHistory() {
         int start = 0;
-        GetRelativeAccountHistory mGetRelativeAccountHistory = new GetRelativeAccountHistory(bilthon_7, 0, HISTORICAL_TRANSFER_BATCH_SIZE, start, mTransferHistoryListener);
+        GetRelativeAccountHistory mGetRelativeAccountHistory = new GetRelativeAccountHistory(bilthon_7, 0,
+                HISTORICAL_TRANSFER_BATCH_SIZE, start, mTransferHistoryListener);
         mWebSocket.addListener(mGetRelativeAccountHistory);
-
-        try{
+        
+        try {
             mWebSocket.connect();
-            synchronized (this){
+            synchronized (this) {
                 wait();
             }
-        }catch (WebSocketException e) {
+        } catch (WebSocketException e) {
             System.out.println("WebSocketException. Msg: " + e.getMessage());
         } catch (InterruptedException e) {
-            System.out.println("InterruptedException. Msg: "+e.getMessage());
+            System.out.println("InterruptedException. Msg: " + e.getMessage());
         }
     }
-
+    
     /**
-     * Callback activated once we get a response back from the full node telling us about the
-     * transfer history of the current account.
+     * Callback activated once we get a response back from the full node telling
+     * us about the transfer history of the current account.
      */
     private WitnessResponseListener mTransferHistoryListener = new WitnessResponseListener() {
-
+        
         @Override
         public void onSuccess(WitnessResponse response) {
             System.out.println("mTransferHistoryListener.onSuccess");
             historicalTransferCount++;
             WitnessResponse<List<HistoricalTransfer>> resp = response;
-            for(HistoricalTransfer historicalTransfer : resp.result){
-                if(historicalTransfer.getOperation() != null){
+            for (HistoricalTransfer historicalTransfer : resp.result) {
+                if (historicalTransfer.getOperation() != null) {
                     System.out.println("Got transfer operation!");
                     TransferOperation transferOperation = historicalTransfer.getOperation();
-                    System.out.println(String.format("%s - > %s, memo: %s",
-                            transferOperation.getFrom().getObjectId(),
-                            transferOperation.getTo().getObjectId(),
-                            transferOperation.getMemo() == null ? "*" : transferOperation.getMemo().getStringMessage()));
+                    System.out.println(String.format("%s - > %s, memo: %s", transferOperation.getFrom().getObjectId(),
+                            transferOperation.getTo().getObjectId(), transferOperation.getMemo() == null ? "*"
+                                    : transferOperation.getMemo().getStringMessage()));
                 }
             }
         }
-
+        
         @Override
         public void onError(BaseResponse.Error error) {
-            System.out.println("onError. Msg: "+error.message);
+            System.out.println("onError. Msg: " + error.message);
         }
     };
 }

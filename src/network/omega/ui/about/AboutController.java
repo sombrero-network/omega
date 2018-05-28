@@ -20,27 +20,29 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class AboutController implements Initializable {
-
+    
     private static final String LINK_1 = "https://github.com/omegacoinnetwork";
     private static final String LINK_2 = "http://omegacoin.network/";
     private static final String LINK_3 = "https://discord.gg/bfMpDQP";
     private static final String LINK_4 = "https://github.com/sombrero-network";
-
+    
     @FXML
     private AnchorPane rootPane;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        //AlertMaker.showTrayMessage(String.format("Hello %s!", System.getProperty("user.name")), "Thanks for trying out Library Assistant");
-
+        // AlertMaker.showTrayMessage(String.format("Hello %s!",
+        // System.getProperty("user.name")), "Thanks for trying out Library
+        // Assistant");
+        
     }
-
+    
     private void loadWebpage(String url) {
         try {
-            if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+            if (System.getProperty("os.name").toLowerCase().contains("linux")) {
                 String address = new URI(url).toURL().toExternalForm();
-                Runtime.getRuntime().exec("x-www-browser " +  address);
-            }else {
+                Runtime.getRuntime().exec("x-www-browser " + address);
+            } else {
                 Desktop.getDesktop().browse(new URI(url));
             }
         } catch (IOException | URISyntaxException e1) {
@@ -48,7 +50,7 @@ public class AboutController implements Initializable {
             handleWebpageLoadException(url);
         }
     }
-
+    
     private void handleWebpageLoadException(String url) {
         WebView browser = new WebView();
         WebEngine webEngine = browser.getEngine();
@@ -60,21 +62,22 @@ public class AboutController implements Initializable {
         stage.show();
         LibraryAssistantUtil.setStageIcon(stage);
     }
-
+    
     @FXML
     private void loadLink1(ActionEvent event) {
         loadWebpage(LINK_1);
     }
-
+    
     @FXML
     private void loadLink2(ActionEvent event) {
         loadWebpage(LINK_2);
     }
-
+    
     @FXML
     private void loadLink3(ActionEvent event) {
         loadWebpage(LINK_3);
     }
+    
     @FXML
     private void loadLink4(ActionEvent event) {
         loadWebpage(LINK_4);

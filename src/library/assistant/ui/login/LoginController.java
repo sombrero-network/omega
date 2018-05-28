@@ -22,24 +22,24 @@ import library.assistant.util.LibraryAssistantUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class LoginController implements Initializable {
-
+    
     @FXML
     private JFXTextField username;
     @FXML
     private JFXPasswordField password;
-
+    
     Preferences preference;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         preference = Preferences.getPreferences();
     }
-
+    
     @FXML
     private void handleLoginButtonAction(ActionEvent event) {
         String uname = username.getText();
         String pword = DigestUtils.shaHex(password.getText());
-
+        
         if (uname.equals(preference.getUsername()) && pword.equals(preference.getPassword())) {
             closeStage();
             loadMain();
@@ -48,16 +48,16 @@ public class LoginController implements Initializable {
             password.getStyleClass().add("wrong-credentials");
         }
     }
-
+    
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
         System.exit(0);
     }
-
+    
     private void closeStage() {
         ((Stage) username.getScene().getWindow()).close();
     }
-
+    
     void loadMain() {
         try {
             Parent parent = FXMLLoader.load(getClass().getResource("/library/assistant/ui/main/main.fxml"));
@@ -70,5 +70,5 @@ public class LoginController implements Initializable {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
 }

@@ -42,9 +42,9 @@ import library.assistant.ui.main.MainController;
 import library.assistant.util.LibraryAssistantUtil;
 
 public class MemberListController implements Initializable {
-
+    
     ObservableList<Member> list = FXCollections.observableArrayList();
-
+    
     @FXML
     private TableView<Member> tableView;
     @FXML
@@ -59,27 +59,27 @@ public class MemberListController implements Initializable {
     private StackPane rootPane;
     @FXML
     private AnchorPane contentPane;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCol();
         loadData();
     }
-
+    
     private void initCol() {
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         mobileCol.setCellValueFactory(new PropertyValueFactory<>("mobile"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
     }
-
+    
     private Stage getStage() {
         return (Stage) tableView.getScene().getWindow();
     }
-
+    
     private void loadData() {
         list.clear();
-
+        
         DatabaseHandler handler = DatabaseHandler.getInstance();
         String qu = "SELECT * FROM MEMBER";
         ResultSet rs = handler.execQuery(qu);
@@ -89,20 +89,20 @@ public class MemberListController implements Initializable {
                 String mobile = rs.getString("mobile");
                 String id = rs.getString("id");
                 String email = rs.getString("email");
-
+                
                 list.add(new Member(name, id, mobile, email));
-
+                
             }
         } catch (SQLException ex) {
             Logger.getLogger(BookAddController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         tableView.setItems(list);
     }
-
+    
     @FXML
     private void handleMemberDelete(ActionEvent event) {
-        //Fetch the selected row
+        // Fetch the selected row
         Member selectedForDeletion = tableView.getSelectionModel().getSelectedItem();
         if (selectedForDeletion == null) {
             AlertMaker.showErrorMessage("No member selected", "Please select a member for deletion.");
@@ -119,7 +119,8 @@ public class MemberListController implements Initializable {
         if (answer.get() == ButtonType.OK) {
             Boolean result = DatabaseHandler.getInstance().deleteMember(selectedForDeletion);
             if (result) {
-                AlertMaker.showSimpleAlert("Book deleted", selectedForDeletion.getName() + " was deleted successfully.");
+                AlertMaker.showSimpleAlert("Book deleted",
+                        selectedForDeletion.getName() + " was deleted successfully.");
                 list.remove(selectedForDeletion);
             } else {
                 AlertMaker.showSimpleAlert("Failed", selectedForDeletion.getName() + " could not be deleted");
@@ -128,46 +129,47 @@ public class MemberListController implements Initializable {
             AlertMaker.showSimpleAlert("Deletion cancelled", "Deletion process cancelled");
         }
     }
-
+    
     @FXML
     private void handleRefresh(ActionEvent event) {
         loadData();
     }
-
+    
     @FXML
     private void handleMemberEdit(ActionEvent event) {
-        //Fetch the selected row
+        // Fetch the selected row
         Member selectedForEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectedForEdit == null) {
             AlertMaker.showErrorMessage("No member selected", "Please select a member for edit.");
             return;
         }
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/library/assistant/ui/addmember/member_add.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/library/assistant/ui/addmember/member_add.fxml"));
             Parent parent = loader.load();
-
+            
             MemberAddController controller = (MemberAddController) loader.getController();
             controller.infalteUI(selectedForEdit);
-
+            
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("Edit Member");
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryAssistantUtil.setStageIcon(stage);
-
+            
             stage.setOnCloseRequest((e) -> {
                 handleRefresh(new ActionEvent());
             });
-
+            
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @FXML
     private void exportAsPDF(ActionEvent event) {
         List<List> printData = new ArrayList<>();
-        String[] headers = {"   Name    ", "ID", "Mobile", "    Email   "};
+        String[] headers = { "   Name    ", "ID", "Mobile", "    Email   " };
         printData.add(Arrays.asList(headers));
         for (Member member : list) {
             List<String> row = new ArrayList<>();
@@ -179,42 +181,42 @@ public class MemberListController implements Initializable {
         }
         LibraryAssistantUtil.initPDFExprot(rootPane, contentPane, getStage(), printData);
     }
-
+    
     @FXML
     private void closeStage(ActionEvent event) {
         getStage().close();
     }
-
+    
     public static class Member {
-
+        
         private final SimpleStringProperty name;
         private final SimpleStringProperty id;
         private final SimpleStringProperty mobile;
         private final SimpleStringProperty email;
-
+        
         public Member(String name, String id, String mobile, String email) {
             this.name = new SimpleStringProperty(name);
             this.id = new SimpleStringProperty(id);
             this.mobile = new SimpleStringProperty(mobile);
             this.email = new SimpleStringProperty(email);
         }
-
+        
         public String getName() {
             return name.get();
         }
-
+        
         public String getId() {
             return id.get();
         }
-
+        
         public String getMobile() {
             return mobile.get();
         }
-
+        
         public String getEmail() {
             return email.get();
         }
-
+        
     }
-
+    
 }

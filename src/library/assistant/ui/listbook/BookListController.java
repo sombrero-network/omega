@@ -36,9 +36,9 @@ import library.assistant.ui.main.MainController;
 import library.assistant.util.LibraryAssistantUtil;
 
 public class BookListController implements Initializable {
-
+    
     ObservableList<Book> list = FXCollections.observableArrayList();
-
+    
     @FXML
     private StackPane rootPane;
     @FXML
@@ -55,17 +55,17 @@ public class BookListController implements Initializable {
     private TableColumn<Book, Boolean> availabilityCol;
     @FXML
     private AnchorPane contentPane;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initCol();
         loadData();
     }
-
+    
     private Stage getStage() {
         return (Stage) tableView.getScene().getWindow();
     }
-
+    
     private void initCol() {
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -73,10 +73,10 @@ public class BookListController implements Initializable {
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         availabilityCol.setCellValueFactory(new PropertyValueFactory<>("availabilty"));
     }
-
+    
     private void loadData() {
         list.clear();
-
+        
         DatabaseHandler handler = DatabaseHandler.getInstance();
         String qu = "SELECT * FROM BOOK";
         ResultSet rs = handler.execQuery(qu);
@@ -87,20 +87,20 @@ public class BookListController implements Initializable {
                 String id = rs.getString("id");
                 String publisher = rs.getString("publisher");
                 Boolean avail = rs.getBoolean("isAvail");
-
+                
                 list.add(new Book(titlex, id, author, publisher, avail));
-
+                
             }
         } catch (SQLException ex) {
             Logger.getLogger(BookAddController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         tableView.setItems(list);
     }
-
+    
     @FXML
     private void handleBookDeleteOption(ActionEvent event) {
-        //Fetch the selected row
+        // Fetch the selected row
         Book selectedForDeletion = tableView.getSelectionModel().getSelectedItem();
         if (selectedForDeletion == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for deletion.");
@@ -117,7 +117,8 @@ public class BookListController implements Initializable {
         if (answer.get() == ButtonType.OK) {
             Boolean result = DatabaseHandler.getInstance().deleteBook(selectedForDeletion);
             if (result) {
-                AlertMaker.showSimpleAlert("Book deleted", selectedForDeletion.getTitle() + " was deleted successfully.");
+                AlertMaker.showSimpleAlert("Book deleted",
+                        selectedForDeletion.getTitle() + " was deleted successfully.");
                 list.remove(selectedForDeletion);
             } else {
                 AlertMaker.showSimpleAlert("Failed", selectedForDeletion.getTitle() + " could not be deleted");
@@ -126,10 +127,10 @@ public class BookListController implements Initializable {
             AlertMaker.showSimpleAlert("Deletion cancelled", "Deletion process cancelled");
         }
     }
-
+    
     @FXML
     private void handleBookEditOption(ActionEvent event) {
-        //Fetch the selected row
+        // Fetch the selected row
         Book selectedForEdit = tableView.getSelectionModel().getSelectedItem();
         if (selectedForEdit == null) {
             AlertMaker.showErrorMessage("No book selected", "Please select a book for edit.");
@@ -138,34 +139,34 @@ public class BookListController implements Initializable {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/library/assistant/ui/addbook/add_book.fxml"));
             Parent parent = loader.load();
-
+            
             BookAddController controller = (BookAddController) loader.getController();
             controller.inflateUI(selectedForEdit);
-
+            
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setTitle("Edit Book");
             stage.setScene(new Scene(parent));
             stage.show();
             LibraryAssistantUtil.setStageIcon(stage);
-
+            
             stage.setOnCloseRequest((e) -> {
                 handleRefresh(new ActionEvent());
             });
-
+            
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @FXML
     private void handleRefresh(ActionEvent event) {
         loadData();
     }
-
+    
     @FXML
     private void exportAsPDF(ActionEvent event) {
         List<List> printData = new ArrayList<>();
-        String[] headers = {"   Title   ", "ID", "  Author  ", "  Publisher ", "Avail"};
+        String[] headers = { "   Title   ", "ID", "  Author  ", "  Publisher ", "Avail" };
         printData.add(Arrays.asList(headers));
         for (Book book : list) {
             List<String> row = new ArrayList<>();
@@ -178,20 +179,20 @@ public class BookListController implements Initializable {
         }
         LibraryAssistantUtil.initPDFExprot(rootPane, contentPane, getStage(), printData);
     }
-
+    
     @FXML
     private void closeStage(ActionEvent event) {
         getStage().close();
     }
-
+    
     public static class Book {
-
+        
         private final SimpleStringProperty title;
         private final SimpleStringProperty id;
         private final SimpleStringProperty author;
         private final SimpleStringProperty publisher;
         private final SimpleStringProperty availabilty;
-
+        
         public Book(String title, String id, String author, String pub, Boolean avail) {
             this.title = new SimpleStringProperty(title);
             this.id = new SimpleStringProperty(id);
@@ -203,27 +204,27 @@ public class BookListController implements Initializable {
                 this.availabilty = new SimpleStringProperty("Issued");
             }
         }
-
+        
         public String getTitle() {
             return title.get();
         }
-
+        
         public String getId() {
             return id.get();
         }
-
+        
         public String getAuthor() {
             return author.get();
         }
-
+        
         public String getPublisher() {
             return publisher.get();
         }
-
+        
         public String getAvailabilty() {
             return availabilty.get();
         }
-
+        
     }
-
+    
 }

@@ -27,28 +27,28 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public final class DatabaseHandler {
-
+    
     private static DatabaseHandler handler = null;
-
+    
     private static final String DB_URL = "jdbc:derby:database;create=true";
     private static Connection conn = null;
     private static Statement stmt = null;
-
+    
     static {
         createConnection();
         inflateDB();
     }
-
+    
     private DatabaseHandler() {
     }
-
+    
     public static DatabaseHandler getInstance() {
         if (handler == null) {
             handler = new DatabaseHandler();
         }
         return handler;
     }
-
+    
     private static void inflateDB() {
         List<String> tableData = new ArrayList<>();
         try {
@@ -56,7 +56,8 @@ public final class DatabaseHandler {
             System.out.println("Already loaded tables " + loadedTables);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(DatabaseHandler.class.getClass().getResourceAsStream("/resources/database/tables.xml"));
+            Document doc = dBuilder
+                    .parse(DatabaseHandler.class.getClass().getResourceAsStream("/resources/database/tables.xml"));
             NodeList nList = doc.getElementsByTagName("table-entry");
             for (int i = 0; i < nList.getLength(); i++) {
                 Node nNode = nList.item(i);
@@ -77,7 +78,7 @@ public final class DatabaseHandler {
             Logger.getLogger(DatabaseHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private static void createConnection() {
         try {
             Class.forName("org.apache.derby.jdbc.EmbeddedDriver").newInstance();
@@ -87,21 +88,22 @@ public final class DatabaseHandler {
             System.exit(0);
         }
     }
-
+    
     private static Set<String> getDBTables() throws SQLException {
         Set<String> set = new HashSet<>();
         DatabaseMetaData dbmeta = conn.getMetaData();
         readDBTable(set, dbmeta, "TABLE", null);
         return set;
     }
-
-    private static void readDBTable(Set<String> set, DatabaseMetaData dbmeta, String searchCriteria, String schema) throws SQLException {
-        ResultSet rs = dbmeta.getTables(null, schema, null, new String[]{searchCriteria});
+    
+    private static void readDBTable(Set<String> set, DatabaseMetaData dbmeta, String searchCriteria, String schema)
+            throws SQLException {
+        ResultSet rs = dbmeta.getTables(null, schema, null, new String[] { searchCriteria });
         while (rs.next()) {
             set.add(rs.getString("TABLE_NAME").toLowerCase());
         }
     }
-
+    
     public ResultSet execQuery(String query) {
         ResultSet result;
         try {
@@ -114,7 +116,7 @@ public final class DatabaseHandler {
         }
         return result;
     }
-
+    
     public boolean execAction(String qu) {
         try {
             stmt = conn.createStatement();
@@ -127,7 +129,7 @@ public final class DatabaseHandler {
         } finally {
         }
     }
-
+    
     public boolean deleteBook(Book book) {
         try {
             String deleteStatement = "DELETE FROM BOOK WHERE ID = ?";
@@ -142,7 +144,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public boolean isBookAlreadyIssued(Book book) {
         try {
             String checkstmt = "SELECT COUNT(*) FROM ISSUE WHERE bookid=?";
@@ -159,7 +161,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public boolean deleteMember(MemberListController.Member member) {
         try {
             String deleteStatement = "DELETE FROM MEMBER WHERE id = ?";
@@ -174,7 +176,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public boolean isMemberHasAnyBooks(MemberListController.Member member) {
         try {
             String checkstmt = "SELECT COUNT(*) FROM ISSUE WHERE memberID=?";
@@ -191,7 +193,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public boolean updateBook(Book book) {
         try {
             String update = "UPDATE BOOK SET TITLE=?, AUTHOR=?, PUBLISHER=? WHERE ID=?";
@@ -207,7 +209,7 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public boolean updateMember(MemberListController.Member member) {
         try {
             String update = "UPDATE MEMBER SET NAME=?, EMAIL=?, MOBILE=? WHERE ID=?";
@@ -223,11 +225,11 @@ public final class DatabaseHandler {
         }
         return false;
     }
-
+    
     public static void main(String[] args) throws Exception {
         DatabaseHandler.getInstance();
     }
-
+    
     public ObservableList<PieChart.Data> getBookGraphStatistics() {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
         try {
@@ -248,7 +250,7 @@ public final class DatabaseHandler {
         }
         return data;
     }
-
+    
     public ObservableList<PieChart.Data> getMemberGraphStatistics() {
         ObservableList<PieChart.Data> data = FXCollections.observableArrayList();
         try {
@@ -269,7 +271,7 @@ public final class DatabaseHandler {
         }
         return data;
     }
-
+    
     private static void createTables(List<String> tableData) throws SQLException {
         Statement statement = conn.createStatement();
         statement.closeOnCompletion();
@@ -279,7 +281,7 @@ public final class DatabaseHandler {
         }
         statement.executeBatch();
     }
-
+    
     public Connection getConnection() {
         return conn;
     }

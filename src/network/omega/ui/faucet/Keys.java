@@ -1,6 +1,5 @@
 package network.omega.ui.faucet;
 
-
 import org.bitcoinj.core.ECKey;
 
 public class Keys {

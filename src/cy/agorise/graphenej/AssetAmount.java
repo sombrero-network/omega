@@ -25,132 +25,160 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
      */
     public static final String KEY_AMOUNT = "amount";
     public static final String KEY_ASSET_ID = "asset_id";
-
+    
     private UnsignedLong amount;
     private Asset asset;
-
+    
     /**
      * Class constructor
-     * @param amount The amount
-     * @param asset The asset
+     * 
+     * @param amount
+     *            The amount
+     * @param asset
+     *            The asset
      */
-    public AssetAmount(UnsignedLong amount, Asset asset){
+    public AssetAmount(UnsignedLong amount, Asset asset) {
         this.amount = amount;
         this.asset = asset;
     }
-
+    
     /**
      * Copy constructor
-     * @param assetAmount The other instance
+     * 
+     * @param assetAmount
+     *            The other instance
      */
-    public AssetAmount(AssetAmount assetAmount){
+    public AssetAmount(AssetAmount assetAmount) {
         this.amount = UnsignedLong.valueOf(assetAmount.getAmount().toString());
         this.asset = new Asset(assetAmount.getAsset());
     }
-
+    
     /**
      * Adds two asset amounts. They must refer to the same Asset type.
-     * @param other: The other AssetAmount to add to this.
-     * @return: A new instance of the AssetAmount class with the combined amount.
+     * 
+     * @param other:
+     *            The other AssetAmount to add to this.
+     * @return: A new instance of the AssetAmount class with the combined
+     *          amount.
      */
-    public AssetAmount add(AssetAmount other){
-        if(!this.getAsset().getObjectId().equals(other.getAsset().getObjectId())){
+    public AssetAmount add(AssetAmount other) {
+        if (!this.getAsset().getObjectId().equals(other.getAsset().getObjectId())) {
             throw new IncompatibleOperation("Cannot add two AssetAmount instances that refer to different assets");
         }
         UnsignedLong combined = this.amount.plus(other.getAmount());
         return new AssetAmount(combined, asset);
     }
-
+    
     /**
      * Adds an aditional amount of base units to this AssetAmount.
-     * @param additional: The amount to add.
-     * @return: A new instance of the AssetAmount class with the added aditional.
+     * 
+     * @param additional:
+     *            The amount to add.
+     * @return: A new instance of the AssetAmount class with the added
+     *          aditional.
      */
-    public AssetAmount add(long additional){
+    public AssetAmount add(long additional) {
         UnsignedLong combined = this.amount.plus(UnsignedLong.valueOf(additional));
         return new AssetAmount(combined, asset);
     }
-
+    
     /**
-     * Subtracts another instance of AssetAmount from this one. This method will always
-     * return absolute values.
-     * @param other: The other asset amount to subtract from this.
-     * @return: The absolute value of the subtraction of the other minus this asset amount.
+     * Subtracts another instance of AssetAmount from this one. This method will
+     * always return absolute values.
+     * 
+     * @param other:
+     *            The other asset amount to subtract from this.
+     * @return: The absolute value of the subtraction of the other minus this
+     *          asset amount.
      */
-    public AssetAmount subtract(AssetAmount other){
-        if(!this.getAsset().getObjectId().equals(other.getAsset().getObjectId())){
+    public AssetAmount subtract(AssetAmount other) {
+        if (!this.getAsset().getObjectId().equals(other.getAsset().getObjectId())) {
             throw new IncompatibleOperation("Cannot subtract two AssetAmount instances that refer to different assets");
         }
         UnsignedLong result = null;
-        if(this.amount.compareTo(other.getAmount()) < 0){
+        if (this.amount.compareTo(other.getAmount()) < 0) {
             result = other.getAmount().minus(this.amount);
-        }else{
+        } else {
             result = this.amount.minus(other.getAmount());
         }
         return new AssetAmount(result, asset);
     }
-
+    
     /**
-     * Multiplies the current amount by a factor provided as the first parameter. The second parameter
-     * specifies the rounding method to be used.
-     * @param factor: The multiplying factor
-     * @param roundingMode: The rounding mode as an instance of the {@link RoundingMode} class
+     * Multiplies the current amount by a factor provided as the first
+     * parameter. The second parameter specifies the rounding method to be used.
+     * 
+     * @param factor:
+     *            The multiplying factor
+     * @param roundingMode:
+     *            The rounding mode as an instance of the {@link RoundingMode}
+     *            class
      * @return The same AssetAmount instance, but with the changed amount value.
      */
-    public AssetAmount multiplyBy(double factor, RoundingMode roundingMode){
+    public AssetAmount multiplyBy(double factor, RoundingMode roundingMode) {
         BigDecimal originalAmount = new BigDecimal(amount.bigIntegerValue());
         BigDecimal decimalResult = originalAmount.multiply(new BigDecimal(factor));
-        UnsignedLong resultingAmount = UnsignedLong.valueOf(DoubleMath.roundToBigInteger(decimalResult.doubleValue(), roundingMode));
+        UnsignedLong resultingAmount = UnsignedLong
+                .valueOf(DoubleMath.roundToBigInteger(decimalResult.doubleValue(), roundingMode));
         return new AssetAmount(resultingAmount, new Asset(asset));
     }
-
+    
     /**
-     * Multiplies the current amount by a factor, using the {@link RoundingMode#HALF_DOWN} constant.
-     * @param factor: The multiplying factor
+     * Multiplies the current amount by a factor, using the
+     * {@link RoundingMode#HALF_DOWN} constant.
+     * 
+     * @param factor:
+     *            The multiplying factor
      * @return The same AssetAmount instance, but with the changed amount value.
      */
-    public AssetAmount multiplyBy(double factor){
+    public AssetAmount multiplyBy(double factor) {
         return this.multiplyBy(factor, RoundingMode.HALF_DOWN);
     }
-
+    
     /**
-     * Divides the current amount by a divisor provided as the first parameter. The second parameter
-     * specifies the rounding method to be used.
-     * @param divisor: The divisor
+     * Divides the current amount by a divisor provided as the first parameter.
+     * The second parameter specifies the rounding method to be used.
+     * 
+     * @param divisor:
+     *            The divisor
      * @return: The same AssetAMount instance, but with the divided amount value
      */
-    public AssetAmount divideBy(double divisor, RoundingMode roundingMode){
+    public AssetAmount divideBy(double divisor, RoundingMode roundingMode) {
         BigDecimal originalAmount = new BigDecimal(amount.bigIntegerValue());
         BigDecimal decimalAmount = originalAmount.divide(new BigDecimal(divisor), 18, RoundingMode.HALF_UP);
-        UnsignedLong resultingAmount = UnsignedLong.valueOf(DoubleMath.roundToBigInteger(decimalAmount.doubleValue(), roundingMode));
+        UnsignedLong resultingAmount = UnsignedLong
+                .valueOf(DoubleMath.roundToBigInteger(decimalAmount.doubleValue(), roundingMode));
         return new AssetAmount(resultingAmount, new Asset(asset));
     }
-
-
+    
     /**
-     * Divides the current amount by a divisor provided as the first parameter, using
-     * the {@link RoundingMode#HALF_DOWN} constant
-     * @param divisor: The divisor
+     * Divides the current amount by a divisor provided as the first parameter,
+     * using the {@link RoundingMode#HALF_DOWN} constant
+     * 
+     * @param divisor:
+     *            The divisor
      * @return: The same AssetAMount instance, but with the divided amount value
      */
-    public AssetAmount divideBy(double divisor){
+    public AssetAmount divideBy(double divisor) {
         return this.divideBy(divisor, RoundingMode.HALF_DOWN);
     }
-
-    public void setAmount(UnsignedLong amount){
+    
+    public void setAmount(UnsignedLong amount) {
         this.amount = amount;
     }
-
-    public UnsignedLong getAmount(){
+    
+    public UnsignedLong getAmount() {
         return this.amount;
     }
-
-    public Asset getAsset(){ return this.asset; }
-
-    public void setAsset(Asset asset){
+    
+    public Asset getAsset() {
+        return this.asset;
+    }
+    
+    public void setAsset(Asset asset) {
         this.asset = asset;
     }
-
+    
     @Override
     public byte[] toBytes() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -163,18 +191,18 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
         // Getting asset id
         byte[] assetId = byteArrayOutputStream.toByteArray();
         byte[] value = Util.revertLong(this.amount.longValue());
-
+        
         // Concatenating and returning value + asset id
         return Bytes.concat(value, assetId);
     }
-
+    
     @Override
     public String toJsonString() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(AssetAmount.class, new AssetAmountSerializer());
         return gsonBuilder.create().toJson(this);
     }
-
+    
     @Override
     public JsonObject toJsonObject() {
         JsonObject jsonAmount = new JsonObject();
@@ -182,28 +210,31 @@ public class AssetAmount implements ByteSerializable, JsonSerializable {
         jsonAmount.addProperty(KEY_ASSET_ID, asset.getObjectId());
         return jsonAmount;
     }
-
+    
     /**
-     * Custom serializer used to translate this object into the JSON-formatted entry we need for a transaction.
+     * Custom serializer used to translate this object into the JSON-formatted
+     * entry we need for a transaction.
      */
     public static class AssetAmountSerializer implements JsonSerializer<AssetAmount> {
-
+        
         @Override
-        public JsonElement serialize(AssetAmount assetAmount, Type type, JsonSerializationContext jsonSerializationContext) {
+        public JsonElement serialize(AssetAmount assetAmount, Type type,
+                JsonSerializationContext jsonSerializationContext) {
             JsonObject obj = new JsonObject();
             obj.addProperty(KEY_AMOUNT, assetAmount.amount);
             obj.addProperty(KEY_ASSET_ID, assetAmount.asset.getObjectId());
             return obj;
         }
     }
-
+    
     /**
      * Custom deserializer used for this class
      */
     public static class AssetAmountDeserializer implements JsonDeserializer<AssetAmount> {
-
+        
         @Override
-        public AssetAmount deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        public AssetAmount deserialize(JsonElement json, Type type,
+                JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             Long amount = json.getAsJsonObject().get(KEY_AMOUNT).getAsLong();
             String assetId = json.getAsJsonObject().get(KEY_ASSET_ID).getAsString();
             AssetAmount assetAmount = new AssetAmount(UnsignedLong.valueOf(amount), new Asset(assetId));

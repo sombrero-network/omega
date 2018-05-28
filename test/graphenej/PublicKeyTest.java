@@ -4,6 +4,7 @@ import cy.agorise.graphenej.Address;
 import cy.agorise.graphenej.PublicKey;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -14,9 +15,10 @@ import static org.junit.Assert.assertNotEquals;
 public class PublicKeyTest {
     @Before
     public void setUp() throws Exception {
-
+        
     }
-    @org.junit.Test
+    
+    // @Test
     public void equals() throws Exception {
         Address address1 = new Address("BTS8RiFgs8HkcVPVobHLKEv6yL3iXcC9SWjbPVS15dDAXLG9GYhnY");
         Address address2 = new Address("BTS8RiFgs8HkcVPVobHLKEv6yL3iXcC9SWjbPVS15dDAXLG9GYhnY");
@@ -27,10 +29,10 @@ public class PublicKeyTest {
         assertEquals("Public keys must be equal", pk1, pk2);
         assertNotEquals("Public keys must not be equal", pk1, pk3);
     }
-
+    
     @After
     public void tearDown() throws Exception {
-
+        
     }
-
+    
 }

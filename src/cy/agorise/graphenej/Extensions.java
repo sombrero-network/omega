@@ -12,32 +12,32 @@ import java.util.ArrayList;
  */
 public class Extensions implements JsonSerializable, ByteSerializable {
     public static final String KEY_EXTENSIONS = "extensions";
-
+    
     private ArrayList<JsonSerializable> extensions;
-
-    public Extensions(){
+    
+    public Extensions() {
         extensions = new ArrayList<>();
     }
-
+    
     @Override
     public String toJsonString() {
         return null;
     }
-
+    
     @Override
     public JsonElement toJsonObject() {
         JsonArray array = new JsonArray();
-        for(JsonSerializable o : extensions)
+        for (JsonSerializable o : extensions)
             array.add(o.toJsonObject());
         return array;
     }
-
+    
     @Override
     public byte[] toBytes() {
         return new byte[1];
     }
-
-    public int size(){
+    
+    public int size() {
         return extensions.size();
     }
 }

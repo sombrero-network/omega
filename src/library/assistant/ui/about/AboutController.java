@@ -19,17 +19,18 @@ import library.assistant.alert.AlertMaker;
 import library.assistant.util.LibraryAssistantUtil;
 
 public class AboutController implements Initializable {
-
+    
     private static final String LINKED_IN = "";
     private static final String FACEBOOK = "";
     private static final String WEBSITE = "";
     private static final String YOUTUBE = "";
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        AlertMaker.showTrayMessage(String.format("Hello %s!", System.getProperty("user.name")), "Thanks for trying out Library Assistant");
+        AlertMaker.showTrayMessage(String.format("Hello %s!", System.getProperty("user.name")),
+                "Thanks for trying out Library Assistant");
     }
-
+    
     private void loadWebpage(String url) {
         try {
             Desktop.getDesktop().browse(new URI(url));
@@ -38,7 +39,7 @@ public class AboutController implements Initializable {
             handleWebpageLoadException(url);
         }
     }
-
+    
     private void handleWebpageLoadException(String url) {
         WebView browser = new WebView();
         WebEngine webEngine = browser.getEngine();
@@ -49,24 +50,24 @@ public class AboutController implements Initializable {
         stage.setTitle("Genuine Coder");
         stage.show();
         LibraryAssistantUtil.setStageIcon(stage);
-
+        
     }
-
+    
     @FXML
     private void loadYoutubeChannel(ActionEvent event) {
         loadWebpage(YOUTUBE);
     }
-
+    
     @FXML
     private void loadBlog(ActionEvent event) {
         loadWebpage(WEBSITE);
     }
-
+    
     @FXML
     private void loadLinkedIN(ActionEvent event) {
         loadWebpage(LINKED_IN);
     }
-
+    
     @FXML
     private void loadFacebook(ActionEvent event) {
         loadWebpage(FACEBOOK);

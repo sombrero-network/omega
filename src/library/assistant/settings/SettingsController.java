@@ -23,7 +23,7 @@ public class SettingsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initDefaultValues();
-    }    
+    }
     
     @FXML
     private void handleSaveButtonAction(ActionEvent event) {
@@ -43,7 +43,7 @@ public class SettingsController implements Initializable {
     
     @FXML
     private void handleCancelButtonAction(ActionEvent event) {
-        ((Stage)nDaysWithoutFine.getScene().getWindow()).close();
+        ((Stage) nDaysWithoutFine.getScene().getWindow()).close();
     }
     
     private void initDefaultValues() {

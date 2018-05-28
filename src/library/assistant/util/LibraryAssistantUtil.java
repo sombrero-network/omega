@@ -31,27 +31,27 @@ import network.omega.ui.resource.ControllerHooks;
 import network.omega.ui.resource.ResourceController;
 
 public class LibraryAssistantUtil {
-
+    
     public static final String ICON_IMAGE_LOC = "/resources/icon.png";
     private static final SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss a");
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
-
+    
     public static void setStageIcon(Stage stage) {
         stage.getIcons().add(new Image(ICON_IMAGE_LOC));
     }
-
-    public static void setSceneStyle(Scene scene, Object obj){
+    
+    public static void setSceneStyle(Scene scene, Object obj) {
         URL url = null;
-        if(System.getProperty("os.name").toLowerCase().contains("linux")){
+        if (System.getProperty("os.name").toLowerCase().contains("linux")) {
             url = obj.getClass().getResource("/resources/dark-theme-linux.css");
-        }else{
+        } else {
             // stylesheet fro mac and win
             url = obj.getClass().getResource("/resources/dark-theme.css");
         }
         String styleSheetPath = url.toExternalForm();
         scene.getStylesheets().add(styleSheetPath);
     }
-
+    
     public static Object loadWindow(URL loc, String title, Stage parentStage) {
         Object controller = null;
         try {
@@ -73,10 +73,10 @@ public class LibraryAssistantUtil {
         } catch (IOException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         return controller;
     }
-
+    
     public static Object loadWindowClosable(URL loc, String title, Stage parentStage) {
         try {
             FXMLLoader loader = new FXMLLoader(loc);
@@ -92,8 +92,8 @@ public class LibraryAssistantUtil {
             Scene scn = new Scene(parent);
             setSceneStyle(scn, MainController.class);
             stage.setScene(scn);
-            stage.setOnCloseRequest(event -> ((ControllerHooks)controller).close());
-            ((ControllerHooks)controller).setStage(stage);
+            stage.setOnCloseRequest(event -> ((ControllerHooks) controller).close());
+            ((ControllerHooks) controller).setStage(stage);
             stage.show();
             setStageIcon(stage);
             return controller;
@@ -102,7 +102,7 @@ public class LibraryAssistantUtil {
         }
         return null;
     }
-
+    
     public static Float getFineAmount(int totalDays) {
         Preferences pref = Preferences.getPreferences();
         Integer fineDays = totalDays - pref.getnDaysWithoutFine();
@@ -112,12 +112,11 @@ public class LibraryAssistantUtil {
         }
         return fine;
     }
-
+    
     public static void initPDFExprot(StackPane rootPane, Node contentPane, Stage stage, List<List> data) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save as PDF");
-        FileChooser.ExtensionFilter extFilter
-                = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf");
         fileChooser.getExtensionFilters().add(extFilter);
         File saveLoc = fileChooser.showSaveDialog(stage);
         ListToPDF ltp = new ListToPDF();
@@ -132,14 +131,15 @@ public class LibraryAssistantUtil {
             }
         });
         if (flag) {
-            AlertMaker.showMaterialDialog(rootPane, contentPane, Arrays.asList(okayBtn, openBtn), "Completed", "Member data has been exported.");
+            AlertMaker.showMaterialDialog(rootPane, contentPane, Arrays.asList(okayBtn, openBtn), "Completed",
+                    "Member data has been exported.");
         }
     }
-
+    
     public static String formatDateTimeString(Date date) {
         return DATE_TIME_FORMAT.format(date);
     }
-
+    
     public static String getDateString(Date date) {
         return DATE_FORMAT.format(date);
     }

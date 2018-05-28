@@ -17,9 +17,9 @@ import java.util.List;
  */
 
 public class LookupAssetSymbolsTest extends BaseApiTest {
-
-    @Test
-    public void testLookupAssetSymbolsWithString(){
+    
+    // @Test
+    public void testLookupAssetSymbolsWithString() {
         ArrayList<String> assetSymbols = new ArrayList<>();
         assetSymbols.add("USD");
         mWebSocket.addListener(new LookupAssetSymbols(assetSymbols, true, new WitnessResponseListener() {
@@ -30,27 +30,27 @@ public class LookupAssetSymbolsTest extends BaseApiTest {
                 Assert.assertEquals(1, assets.size());
                 Assert.assertEquals("1.3.121", assets.get(0).getObjectId());
             }
-
+            
             @Override
             public void onError(BaseResponse.Error error) {
                 System.out.println("onError");
             }
         }));
     }
-
-    @Test
-    public void testLookupAssetSymbolsWithAsset(){
+    
+    // @Test
+    public void testLookupAssetSymbolsWithAsset() {
         ArrayList<Asset> assetSymbols = new ArrayList<>();
         assetSymbols.add(new Asset("1.3.121"));
         mWebSocket.addListener(new LookupAssetSymbols(assetSymbols, true, new WitnessResponseListener() {
             @Override
-                public void onSuccess(WitnessResponse response) {
+            public void onSuccess(WitnessResponse response) {
                 System.out.println("onSuccess");
                 List<Asset> assets = (List<Asset>) response.result;
                 Assert.assertEquals(1, assets.size());
                 Assert.assertEquals("1.3.121", assets.get(0).getObjectId());
             }
-
+            
             @Override
             public void onError(BaseResponse.Error error) {
                 System.out.println("onError");

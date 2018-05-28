@@ -9,24 +9,24 @@ import javafx.stage.Stage;
 import library.assistant.database.DatabaseHandler;
 
 public class SettingsLoader extends Application {
-
+    
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/library/assistant/settings/settings.fxml"));
-
+        
         Scene scene = new Scene(root);
-
+        
         stage.setScene(scene);
         stage.show();
         stage.setTitle("Settings");
-
+        
         new Thread(() -> {
             DatabaseHandler.getInstance();
         }).start();
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
-
+    
 }

@@ -13,11 +13,11 @@ import library.assistant.ui.listmember.MemberListController.Member;
  * @author afsal
  */
 public class DataHelper {
-
+    
     public static boolean insertNewBook(Book book) {
         try {
-            PreparedStatement statement = DatabaseHandler.getInstance().getConnection().prepareStatement(
-                    "INSERT INTO BOOK(id,title,author,publisher,isAvail) VALUES(?,?,?,?,?)");
+            PreparedStatement statement = DatabaseHandler.getInstance().getConnection()
+                    .prepareStatement("INSERT INTO BOOK(id,title,author,publisher,isAvail) VALUES(?,?,?,?,?)");
             statement.setString(1, book.getId());
             statement.setString(2, book.getTitle());
             statement.setString(3, book.getAuthor());
@@ -29,11 +29,11 @@ public class DataHelper {
         }
         return false;
     }
-
+    
     public static boolean insertNewMember(Member member) {
         try {
-            PreparedStatement statement = DatabaseHandler.getInstance().getConnection().prepareStatement(
-                    "INSERT INTO MEMBER(id,name,mobile,email) VALUES(?,?,?,?)".toUpperCase());
+            PreparedStatement statement = DatabaseHandler.getInstance().getConnection()
+                    .prepareStatement("INSERT INTO MEMBER(id,name,mobile,email) VALUES(?,?,?,?)".toUpperCase());
             statement.setString(1, member.getId());
             statement.setString(2, member.getName());
             statement.setString(3, member.getMobile());
@@ -44,7 +44,7 @@ public class DataHelper {
         }
         return false;
     }
-
+    
     public static boolean isBookExists(String id) {
         try {
             String checkstmt = "SELECT COUNT(*) FROM BOOK WHERE id=?";
@@ -61,7 +61,7 @@ public class DataHelper {
         }
         return false;
     }
-
+    
     public static boolean isMemberExists(String id) {
         try {
             String checkstmt = "SELECT COUNT(*) FROM MEMBER WHERE id=?";
@@ -78,7 +78,7 @@ public class DataHelper {
         }
         return false;
     }
-
+    
     public static ResultSet getBookInfoWithIssueData(String id) {
         try {
             String query = "SELECT BOOK.title, BOOK.author, BOOK.isAvail, ISSUE.issueTime FROM BOOK LEFT JOIN ISSUE on BOOK.id = ISSUE.bookID where BOOK.id = ?";

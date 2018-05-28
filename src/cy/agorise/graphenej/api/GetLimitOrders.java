@@ -21,36 +21,40 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  Class that implements get_limit_orders request handler.
+ * Class that implements get_limit_orders request handler.
  *
- *  Get limit orders in a given market.
+ * Get limit orders in a given market.
  *
- *  The request returns the limit orders, ordered from least price to greatest
+ * The request returns the limit orders, ordered from least price to greatest
  *
- *  @see <a href="https://goo.gl/5sRTRq">get_limit_orders API doc</a>
+ * @see <a href="https://goo.gl/5sRTRq">get_limit_orders API doc</a>
  *
  */
 public class GetLimitOrders extends BaseGrapheneHandler {
-
+    
     private String a;
     private String b;
     private int limit;
     private WitnessResponseListener mListener;
-
+    
     private boolean mOneTime;
-
-
+    
     /**
      * Default Constructor
      *
-     * @param a             id of asset being sold
-     * @param b             id of asset being purchased
-     * @param limit         maximum number of orders to retrieve
-     * @param oneTime       boolean value indicating if WebSocket must be closed (true) or not
-     *                      (false) after the response
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param a
+     *            id of asset being sold
+     * @param b
+     *            id of asset being purchased
+     * @param limit
+     *            maximum number of orders to retrieve
+     * @param oneTime
+     *            boolean value indicating if WebSocket must be closed (true) or
+     *            not (false) after the response
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
     public GetLimitOrders(String a, String b, int limit, boolean oneTime, WitnessResponseListener listener) {
         super(listener);
@@ -60,21 +64,26 @@ public class GetLimitOrders extends BaseGrapheneHandler {
         this.mOneTime = oneTime;
         this.mListener = listener;
     }
-
+    
     /**
-     * Using this constructor the WebSocket connection closes after the response.
+     * Using this constructor the WebSocket connection closes after the
+     * response.
      *
-     * @param a             id of asset being sold
-     * @param b             id of asset being purchased
-     * @param limit         maximum number of orders to retrieve
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param a
+     *            id of asset being sold
+     * @param b
+     *            id of asset being purchased
+     * @param limit
+     *            maximum number of orders to retrieve
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
     public GetLimitOrders(String a, String b, int limit, WitnessResponseListener listener) {
         this(a, b, limit, true, listener);
     }
-
+    
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> accountParams = new ArrayList<>();
@@ -84,20 +93,22 @@ public class GetLimitOrders extends BaseGrapheneHandler {
         ApiCall getAccountByName = new ApiCall(0, RPC.CALL_GET_LIMIT_ORDERS, accountParams, RPC.VERSION, 1);
         websocket.sendText(getAccountByName.toJsonString());
     }
-
+    
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            System.out.println("<<< "+frame.getPayloadText());
+        if (frame.isTextFrame())
+            System.out.println("<<< " + frame.getPayloadText());
         try {
             String response = frame.getPayloadText();
             GsonBuilder builder = new GsonBuilder();
-
-            Type GetLimitOrdersResponse = new TypeToken<WitnessResponse<List<LimitOrder>>>() {}.getType();
+            
+            Type GetLimitOrdersResponse = new TypeToken<WitnessResponse<List<LimitOrder>>>() {
+            }.getType();
             builder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetAmountDeserializer());
             builder.registerTypeAdapter(UserAccount.class, new UserAccount.UserAccountSimpleDeserializer());
             builder.registerTypeAdapter(LimitOrder.class, new LimitOrder.LimitOrderDeserializer());
-            WitnessResponse<List<LimitOrder>> witnessResponse = builder.create().fromJson(response, GetLimitOrdersResponse);
+            WitnessResponse<List<LimitOrder>> witnessResponse = builder.create().fromJson(response,
+                    GetLimitOrdersResponse);
             if (witnessResponse.error != null) {
                 this.mListener.onError(witnessResponse.error);
             } else {
@@ -106,30 +117,30 @@ public class GetLimitOrders extends BaseGrapheneHandler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(mOneTime){
+        if (mOneTime) {
             websocket.disconnect();
         }
     }
-
+    
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame()){
-            System.out.println(">>> "+frame.getPayloadText());
+        if (frame.isTextFrame()) {
+            System.out.println(">>> " + frame.getPayloadText());
         }
     }
-
+    
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        if(mOneTime){
+        if (mOneTime) {
             websocket.disconnect();
         }
     }
-
+    
     @Override
     public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
         mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        if(mOneTime){
+        if (mOneTime) {
             websocket.disconnect();
         }
     }

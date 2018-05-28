@@ -10,9 +10,9 @@ import org.junit.Test;
  */
 
 public class UtilTest {
-
+    
     @Test
-    public void testRevertUnsignedLong(){
+    public void testRevertUnsignedLong() {
         UnsignedLong unsignedLong = UnsignedLong.valueOf("12179241258665439971");
         byte[] reversed = Util.revertUnsignedLong(unsignedLong);
         Assert.assertEquals("e3f28878655b05a9", Util.bytesToHex(reversed));

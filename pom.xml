@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -50,13 +50,6 @@
             <groupId>com.neovisionaries</groupId>
             <artifactId>nv-websocket-client</artifactId>
             <version>1.30</version>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.jfoenix</groupId>
@@ -111,12 +104,6 @@
             <artifactId>guava</artifactId>
             <version>21.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.jfoenix/jfoenix -->
-        <dependency>
-            <groupId>com.jfoenix</groupId>
-            <artifactId>jfoenix</artifactId>
-            <version>8.0.1</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
@@ -136,7 +123,7 @@
             <version>1.7.25</version>
             <scope>test</scope>
         </dependency>
- <!-- https://bintray.com/jerady/maven/FontAwesomeFX/8.15 -->
+        <!-- https://bintray.com/jerady/maven/FontAwesomeFX/8.15 -->
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-commons</artifactId>
@@ -154,12 +141,12 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
-
+            <version>2.15</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
             <artifactId>jersey-media-moxy</artifactId>
-
+            <version>2.15</version>
         </dependency>
 
         <!-- Spring 3 dependencies -->
@@ -180,11 +167,6 @@
             <artifactId>spring-web</artifactId>
             <version>3.0.5.RELEASE</version>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-        </dependency>
-
 
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client -->
         <dependency>
@@ -196,40 +178,41 @@
 
         <!-- Jersey + Spring -->
         <dependency>
-        <groupId>org.glassfish.jersey.ext</groupId>
-        <artifactId>jersey-spring3</artifactId>
-        <exclusions>
-            <exclusion>
-                <artifactId>spring-context</artifactId>
-                <groupId>org.springframework</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>spring-beans</artifactId>
-                <groupId>org.springframework</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>spring-core</artifactId>
-                <groupId>org.springframework</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>spring-web</artifactId>
-                <groupId>org.springframework</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>jersey-server</artifactId>
-                <groupId>org.glassfish.jersey.core</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>
-                    jersey-container-servlet-core
-                </artifactId>
-                <groupId>org.glassfish.jersey.containers</groupId>
-            </exclusion>
-            <exclusion>
-                <artifactId>hk2</artifactId>
-                <groupId>org.glassfish.hk2</groupId>
-            </exclusion>
-        </exclusions>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-spring3</artifactId>
+            <version>2.15</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-context</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-beans</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-web</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jersey-server</artifactId>
+                    <groupId>org.glassfish.jersey.core</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>
+                        jersey-container-servlet-core
+                    </artifactId>
+                    <groupId>org.glassfish.jersey.containers</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>hk2</artifactId>
+                    <groupId>org.glassfish.hk2</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -253,22 +236,45 @@
             <artifactId>oshi-core</artifactId>
             <version>3.5.0</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
-    <plugins>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.7.0</version>
-            <configuration>
-                <source>1.8</source>
-                <target>1.8</target>
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>2.7.3</version>
+                <configuration>
+                    <directories>
+                        <directory>${project.basedir}/src</directory>
+                        <directory>${project.basedir}/test</directory>
+                    </directories>
+                    <excludes>
+                        <exclude>**/*.json</exclude>
+                    </excludes>
+                    <encoding>UTF-8</encoding>
+                    <configFile>${project.basedir}/code-formating/eclipse-oxige3a-Java-Code-Formatting.xml</configFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+
+    </build>
 
 </project>

@@ -6,7 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class LibraryAssistant extends Application {
     
     @Override
@@ -18,7 +17,7 @@ public class LibraryAssistant extends Application {
         stage.setScene(scene);
         stage.show();
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }

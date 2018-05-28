@@ -23,83 +23,86 @@ public class ManageLocalStorage {
     static Path applicationDir = Paths.get(userHome, ".omegagovernance");
     static Desktop ds;
     private Preferences prefs;
-
-    public static void openPasswordFileFolder(){
-
+    
+    public static void openPasswordFileFolder() {
+        
         try {
-            if(System.getProperty("os.name").toLowerCase().contains("linux")) {
+            if (System.getProperty("os.name").toLowerCase().contains("linux")) {
                 Runtime.getRuntime().exec("nautilus " + applicationDir.toFile());
-            }else {
+            } else {
                 if (Desktop.isDesktopSupported()) {
                     ds = Desktop.getDesktop();
-
-                        //Path passwordFile = applicationDir.resolve("password.dat");
-                        ds.open(applicationDir.toFile());
+                    
+                    // Path passwordFile =
+                    // applicationDir.resolve("password.dat");
+                    ds.open(applicationDir.toFile());
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public static void readPasswordFile(){
+    
+    public static void readPasswordFile() {
         List<String> list = new ArrayList<>();
-
+        
         try (Stream<String> stream = Files.lines(applicationDir.resolve("password.dat"))) {
             list = stream.collect(Collectors.toList());
-
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         username = list.get(0);
         password = list.get(1);
     }
-
-    public static Boolean passwordFileExists(){
+    
+    public static Boolean passwordFileExists() {
         Path passwordFile = applicationDir.resolve("password.dat");
-        if(passwordFile.toFile().exists()){
+        if (passwordFile.toFile().exists()) {
             return true;
         }
         return false;
     }
-
-    public static void createStorageDirectory(){
+    
+    public static void createStorageDirectory() {
         try {
-            if(!Files.exists(applicationDir)) {
+            if (!Files.exists(applicationDir)) {
                 Files.createDirectories(applicationDir);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    public static void storePasswordFile(KeysGenerator kg){
+    
+    public static void storePasswordFile(KeysGenerator kg) {
         createStorageDirectory();
         Path passwordFile = applicationDir.resolve("password.dat");
         // Files.newBufferedWriter() uses UTF-8 encoding by default
-        try (BufferedWriter writer = Files.newBufferedWriter(passwordFile)){
+        try (BufferedWriter writer = Files.newBufferedWriter(passwordFile)) {
             writer.write(kg.account_name + "\n");
             writer.write(kg.password + "\n");
-        }catch (IOException e){};
+        } catch (IOException e) {
+        }
+        ;
     }
-
+    
     public static void main(String[] args) {
         ManageLocalStorage test = new ManageLocalStorage();
         KeysGenerator kg = KeysGenerator.generate("u-18", RandomPassword.newPassword(70));
         test.storePasswordFile(kg);
-        //test.setPreference();
-        //System.out.println(test.prefs.absolutePath());
-
+        // test.setPreference();
+        // System.out.println(test.prefs.absolutePath());
+        
     }
-
+    
     public void setPreference() {
         // This will define a node in which the preferences can be stored
         prefs = Preferences.userRoot().node(this.getClass().getName());
         String ID1 = "Test1";
         String ID2 = "Test2";
         String ID3 = "Test3";
-
+        
         // First we will get the values
         // Define a boolean value
         System.out.println(prefs.getBoolean(ID1, true));
@@ -107,14 +110,14 @@ public class ManageLocalStorage {
         System.out.println(prefs.get(ID2, "Hello World"));
         // Define a integer with default 50
         System.out.println(prefs.getInt(ID3, 50));
-
+        
         // now set the values
         prefs.putBoolean(ID1, false);
         prefs.put(ID2, "Hello Europa");
         prefs.putInt(ID3, 45);
-
+        
         // Delete the preference settings for the first value
         prefs.remove(ID1);
-
+        
     }
 }

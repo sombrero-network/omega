@@ -14,16 +14,16 @@ import java.util.Arrays;
  * @author hvarona
  */
 public class BIP39 {
-
+    
     private final ECKey mPrivateKey;
-
+    
     public BIP39(String words, String passphrase) {
-
+        
         byte[] seed = MnemonicCode.toSeed(Arrays.asList(words.split(" ")), passphrase);
         mPrivateKey = HDKeyDerivation.createMasterPrivateKey(seed);
-
+        
     }
-
+    
     public String getUncompressedAddress() {
         RIPEMD160Digest ripemd160Digest = new RIPEMD160Digest();
         SHA512Digest sha512Digest = new SHA512Digest();
@@ -37,10 +37,10 @@ public class BIP39 {
         byte[] checksum = new byte[(160 / 8) + 4];
         System.arraycopy(calculateChecksum(output), 0, checksum, checksum.length - 4, 4);
         System.arraycopy(output, 0, checksum, 0, output.length);
-
+        
         return ("BTS" + Base58.encode(checksum));
     }
-
+    
     public String getAddress() {
         RIPEMD160Digest ripemd160Digest = new RIPEMD160Digest();
         SHA512Digest sha512Digest = new SHA512Digest();
@@ -54,10 +54,10 @@ public class BIP39 {
         byte[] checksum = new byte[(160 / 8) + 4];
         System.arraycopy(calculateChecksum(output), 0, checksum, checksum.length - 4, 4);
         System.arraycopy(output, 0, checksum, 0, output.length);
-
+        
         return ("BTS" + Base58.encode(checksum));
     }
-
+    
     public byte[] calculateChecksum(byte[] input) {
         byte[] answer = new byte[4];
         RIPEMD160Digest ripemd160Digest = new RIPEMD160Digest();
@@ -67,13 +67,13 @@ public class BIP39 {
         System.arraycopy(output, 0, answer, 0, 4);
         return answer;
     }
-
+    
     public byte[] getPublicKey() {
         return mPrivateKey.getPubKey();
     }
-
+    
     public ECKey getPrivateKey() {
         return mPrivateKey;
     }
-
+    
 }

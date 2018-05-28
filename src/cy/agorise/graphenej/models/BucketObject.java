@@ -28,7 +28,7 @@ public class BucketObject {
     public static final String KEY_SECONDS = "seconds";
     public static final String KEY_OPEN = "open";
     public static final String KEY_KEY = "key";
-
+    
     public String id;
     public Key key;
     public BigDecimal high_base;
@@ -41,18 +41,19 @@ public class BucketObject {
     public BigDecimal close_quote;
     public BigDecimal base_volume;
     public BigDecimal quote_volume;
-
+    
     public static class Key {
         public Asset base;
         public Asset quote;
         public long seconds;
         public Date open;
     }
-
+    
     public static class BucketDeserializer implements JsonDeserializer<BucketObject> {
-
+        
         @Override
-        public BucketObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        public BucketObject deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                throws JsonParseException {
             JsonObject jsonBucket = json.getAsJsonObject();
             BucketObject bucket = new BucketObject();
             bucket.high_base = jsonBucket.get(KEY_HIGH_BASE).getAsBigDecimal();
@@ -71,12 +72,13 @@ public class BucketObject {
             bucket.key.base = new Asset(baseId);
             bucket.key.quote = new Asset(quoteId);
             bucket.key.seconds = jsonBucket.get(KEY_KEY).getAsJsonObject().get(KEY_SECONDS).getAsLong();
-
+            
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             try {
-                bucket.key.open = dateFormat.parse(jsonBucket.get(KEY_KEY).getAsJsonObject().get(KEY_OPEN).getAsString());
+                bucket.key.open = dateFormat
+                        .parse(jsonBucket.get(KEY_KEY).getAsJsonObject().get(KEY_OPEN).getAsString());
             } catch (ParseException e) {
-                System.out.println("ParseException while deserializing BucketObject. Msg: "+e.getMessage());
+                System.out.println("ParseException while deserializing BucketObject. Msg: " + e.getMessage());
             }
             return bucket;
         }

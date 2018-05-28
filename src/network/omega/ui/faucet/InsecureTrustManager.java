@@ -12,7 +12,7 @@ public class InsecureTrustManager implements X509TrustManager {
     public void checkClientTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
         // Everyone is trusted!
     }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -20,7 +20,7 @@ public class InsecureTrustManager implements X509TrustManager {
     public void checkServerTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
         // Everyone is trusted!
     }
-
+    
     /**
      * {@inheritDoc}
      */

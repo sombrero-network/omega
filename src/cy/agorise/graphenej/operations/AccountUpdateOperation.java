@@ -18,22 +18,29 @@ public class AccountUpdateOperation extends BaseOperation {
     public static final String KEY_FEE = "fee";
     public static final String KEY_NEW_OPTIONS = "new_options";
     public static final String KEY_EXTENSIONS = "extensions";
-
+    
     private AssetAmount fee;
     private UserAccount account;
     private Optional<Authority> owner;
     private Optional<Authority> active;
     private Optional<AccountOptions> new_options;
-
+    
     /**
      * Account update operation constructor.
-     * @param account User account to update. Can't be null.
-     * @param owner Owner authority to set. Can be null.
-     * @param active Active authority to set. Can be null.
-     * @param options Active authority to set. Can be null.
-     * @param fee The fee to pay. Can be null.
+     * 
+     * @param account
+     *            User account to update. Can't be null.
+     * @param owner
+     *            Owner authority to set. Can be null.
+     * @param active
+     *            Active authority to set. Can be null.
+     * @param options
+     *            Active authority to set. Can be null.
+     * @param fee
+     *            The fee to pay. Can be null.
      */
-    public AccountUpdateOperation(UserAccount account, Authority owner, Authority active, AccountOptions options, AssetAmount fee){
+    public AccountUpdateOperation(UserAccount account, Authority owner, Authority active, AccountOptions options,
+            AssetAmount fee) {
         super(OperationType.ACCOUNT_UPDATE_OPERATION);
         this.fee = fee;
         this.account = account;
@@ -42,53 +49,53 @@ public class AccountUpdateOperation extends BaseOperation {
         this.new_options = new Optional<>(options);
         extensions = new Extensions();
     }
-
-    public AccountUpdateOperation(UserAccount account, Authority owner, Authority active, AccountOptions options){
+    
+    public AccountUpdateOperation(UserAccount account, Authority owner, Authority active, AccountOptions options) {
         this(account, owner, active, options, new AssetAmount(UnsignedLong.valueOf(0), new Asset("1.3.0")));
     }
-
+    
     @Override
-    public void setFee(AssetAmount fee){
+    public void setFee(AssetAmount fee) {
         this.fee = fee;
     }
-
-    public void setOwner(Authority owner){
+    
+    public void setOwner(Authority owner) {
         this.owner = new Optional<>(owner);
     }
-
-    public void setActive(Authority active){
+    
+    public void setActive(Authority active) {
         this.active = new Optional<>(active);
     }
-
-    public void setAccountOptions(AccountOptions options){
+    
+    public void setAccountOptions(AccountOptions options) {
         this.new_options = new Optional<>(options);
     }
-
+    
     @Override
     public String toJsonString() {
         Gson gson = new Gson();
         return gson.toJson(this);
     }
-
+    
     @Override
     public JsonElement toJsonObject() {
         JsonArray array = new JsonArray();
         array.add(this.getId());
-
+        
         JsonObject accountUpdate = new JsonObject();
         accountUpdate.add(KEY_FEE, fee.toJsonObject());
         accountUpdate.addProperty(KEY_ACCOUNT, account.getObjectId());
-        if(owner.isSet())
+        if (owner.isSet())
             accountUpdate.add(KEY_OWNER, owner.toJsonObject());
-        if(active.isSet())
+        if (active.isSet())
             accountUpdate.add(KEY_ACTIVE, active.toJsonObject());
-        if(new_options.isSet())
+        if (new_options.isSet())
             accountUpdate.add(KEY_NEW_OPTIONS, new_options.toJsonObject());
         accountUpdate.add(KEY_EXTENSIONS, extensions.toJsonObject());
         array.add(accountUpdate);
         return array;
     }
-
+    
     @Override
     public byte[] toBytes() {
         byte[] feeBytes = fee.toBytes();

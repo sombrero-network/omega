@@ -22,7 +22,7 @@ import library.assistant.database.DatabaseHandler;
 import library.assistant.ui.listbook.BookListController;
 
 public class BookAddController implements Initializable {
-
+    
     @FXML
     private JFXTextField title;
     @FXML
@@ -35,57 +35,61 @@ public class BookAddController implements Initializable {
     private JFXButton saveButton;
     @FXML
     private JFXButton cancelButton;
-
+    
     DatabaseHandler databaseHandler;
     @FXML
     private StackPane rootPane;
     private Boolean isInEditMode = Boolean.FALSE;
     @FXML
     private AnchorPane mainContainer;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         databaseHandler = DatabaseHandler.getInstance();
     }
-
+    
     @FXML
     private void addBook(ActionEvent event) {
         String bookID = id.getText();
         String bookAuthor = author.getText();
         String bookName = title.getText();
         String bookPublisher = publisher.getText();
-
+        
         if (bookID.isEmpty() || bookAuthor.isEmpty() || bookName.isEmpty() || bookPublisher.isEmpty()) {
-            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Insufficient Data", "Please enter data in all fields.");
+            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Insufficient Data",
+                    "Please enter data in all fields.");
             return;
         }
-
+        
         if (DataHelper.isBookExists(bookID)) {
-            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Duplicate book id", "Book with same Book ID exists.\nPlease use new ID");
+            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Duplicate book id",
+                    "Book with same Book ID exists.\nPlease use new ID");
             return;
         }
-
+        
         if (isInEditMode) {
             handleEditOperation();
             return;
         }
-
+        
         Book book = new Book(bookID, bookName, bookAuthor, bookPublisher, Boolean.TRUE);
         boolean result = DataHelper.insertNewBook(book);
         if (result) {
-            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "New book added", bookName + " has been added");
+            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "New book added",
+                    bookName + " has been added");
             clearEntries();
         } else {
-            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Failed to add new book", "Check all the entries and try again");
+            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Failed to add new book",
+                    "Check all the entries and try again");
         }
     }
-
+    
     @FXML
     private void cancel(ActionEvent event) {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         stage.close();
     }
-
+    
     private void checkData() {
         String qu = "SELECT title FROM BOOK";
         ResultSet rs = databaseHandler.execQuery(qu);
@@ -98,7 +102,7 @@ public class BookAddController implements Initializable {
             Logger.getLogger(BookAddController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     public void inflateUI(BookListController.Book book) {
         title.setText(book.getTitle());
         id.setText(book.getId());
@@ -107,20 +111,22 @@ public class BookAddController implements Initializable {
         id.setEditable(false);
         isInEditMode = Boolean.TRUE;
     }
-
+    
     private void clearEntries() {
         title.clear();
         id.clear();
         author.clear();
         publisher.clear();
     }
-
+    
     private void handleEditOperation() {
-        BookListController.Book book = new BookListController.Book(title.getText(), id.getText(), author.getText(), publisher.getText(), true);
+        BookListController.Book book = new BookListController.Book(title.getText(), id.getText(), author.getText(),
+                publisher.getText(), true);
         if (databaseHandler.updateBook(book)) {
             AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Success", "Update complete");
         } else {
-            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Failed", "Could not update data");
+            AlertMaker.showMaterialDialog(rootPane, mainContainer, new ArrayList<>(), "Failed",
+                    "Could not update data");
         }
     }
 }

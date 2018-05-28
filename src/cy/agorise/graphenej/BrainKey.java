@@ -15,30 +15,30 @@ import java.util.ArrayList;
  * Class used to encapsulate all BrainKey-related operations.
  */
 public class BrainKey {
-
+    
     // The size of the word dictionary
     public static final int DICT_WORD_COUNT = 49744;
-
+    
     /* The required number of words */
     public static final int BRAINKEY_WORD_COUNT = 12;
-
+    
     /* The default sequence number is zero */
     public static final int DEFAULT_SEQUENCE_NUMBER = 0;
-
+    
     /* The corresponding private key derivated from the brain key */
     private ECKey mPrivateKey;
-
+    
     /* The actual words from this brain key + the sequence number */
     private String mBrainKey;
-
+    
     /* The sequence number */
     private int sequenceNumber;
-
+    
     /**
      * Method that will generate a random brain key
      *
-     * @param words The list of words from the graphene specification
-     * dictionary.
+     * @param words
+     *            The list of words from the graphene specification dictionary.
      * @return A random sequence of words
      */
     public static String suggest(String words) {
@@ -52,18 +52,21 @@ public class BrainKey {
             suggestedBrainKey.add(wordArray[index].toUpperCase());
         }
         StringBuilder stringBuilder = new StringBuilder();
-        for(String word : suggestedBrainKey){
+        for (String word : suggestedBrainKey) {
             stringBuilder.append(word);
             stringBuilder.append(" ");
         }
         return stringBuilder.toString().trim();
     }
+    
     /**
      * BrainKey constructor that takes as argument a specific brain key word
      * sequence and generates the private key and address from that.
      *
-     * @param words The brain key specifying the private key
-     * @param sequence Sequence number
+     * @param words
+     *            The brain key specifying the private key
+     * @param sequence
+     *            Sequence number
      */
     public BrainKey(String words, int sequence) {
         this.mBrainKey = words;
@@ -75,64 +78,72 @@ public class BrainKey {
             MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
             byte[] result = sha256.digest(bytes);
             mPrivateKey = ECKey.fromPrivate(result);
-
+            
         } catch (NoSuchAlgorithmException e) {
             System.out.println("NoSuchAlgotithmException. Msg: " + e.getMessage());
         } catch (UnsupportedEncodingException e) {
             System.out.println("UnsupportedEncodingException. Msg: " + e.getMessage());
         }
     }
-
-
+    
     /**
      * Gets the array of bytes representing the public key.
+     * 
      * @return
      */
     public byte[] getPublicKey() {
         return mPrivateKey.getPubKey();
     }
-
+    
     /**
      * Returns the private key as an instance of the ECKey class.
+     * 
      * @return
      */
     public ECKey getPrivateKey() {
         return mPrivateKey;
     }
-
+    
     /**
-     * Returns the private key in the Wallet Import Format for the uncompressed private key.
+     * Returns the private key in the Wallet Import Format for the uncompressed
+     * private key.
+     * 
      * @see <a href="https://en.bitcoin.it/wiki/Wallet_import_format">WIF</a>
      * @return
      */
-    public String getWalletImportFormat(){
-        DumpedPrivateKey wif = this.mPrivateKey.decompress().getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+    public String getWalletImportFormat() {
+        DumpedPrivateKey wif = this.mPrivateKey.decompress()
+                .getPrivateKeyEncoded(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
         return wif.toString();
     }
-
+    
     /**
      * Returns the public address derived from this brain key
-     * @param prefix: The prefix to use in this address.
+     * 
+     * @param prefix:
+     *            The prefix to use in this address.
      * @return An instance of the {@link Address} class
      */
-    public Address getPublicAddress(String prefix){
+    public Address getPublicAddress(String prefix) {
         return new Address(ECKey.fromPublicOnly(getPublicKey()), prefix);
     }
-
+    
     /**
      * Brain key words getter
+     * 
      * @return: The word sequence that comprises this brain key
      */
-    public String getBrainKey(){
+    public String getBrainKey() {
         return mBrainKey;
     }
-
+    
     /**
      * Sequence number getter
-     * @return: The sequence number used alongside with the brain key words in order
-     * to derive the private key
+     * 
+     * @return: The sequence number used alongside with the brain key words in
+     *          order to derive the private key
      */
-    public int getSequenceNumber(){
+    public int getSequenceNumber() {
         return sequenceNumber;
     }
 }

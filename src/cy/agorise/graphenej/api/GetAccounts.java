@@ -20,119 +20,132 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  Class that implements get_accounts request handler.
+ * Class that implements get_accounts request handler.
  *
- *  Get a list of accounts by ID.
+ * Get a list of accounts by ID.
  *
- *  The response returns the accounts corresponding to the provided IDs.
+ * The response returns the accounts corresponding to the provided IDs.
  *
- *  @see <a href="https://goo.gl/r5RqKG">get_accounts API doc</a>
+ * @see <a href="https://goo.gl/r5RqKG">get_accounts API doc</a>
  */
 public class GetAccounts extends BaseGrapheneHandler {
     private String accountId;
     private List<UserAccount> userAccounts;
     private WitnessResponseListener mListener;
     private boolean mOneTime;
-
+    
     /**
      * Constructor for one account only.
      *
-     * @param accountId     ID of the account to retrieve
-     * @param oneTime       boolean value indicating if WebSocket must be closed (true) or not
-     *                      (false) after the response
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param accountId
+     *            ID of the account to retrieve
+     * @param oneTime
+     *            boolean value indicating if WebSocket must be closed (true) or
+     *            not (false) after the response
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
-    public GetAccounts(String accountId, boolean oneTime, WitnessResponseListener listener){
+    public GetAccounts(String accountId, boolean oneTime, WitnessResponseListener listener) {
         super(listener);
         this.accountId = accountId;
         this.mOneTime = oneTime;
         this.mListener = listener;
     }
-
+    
     /**
      * Constructor for account list.
      *
-     * @param accounts      list with the accounts to retrieve
-     * @param oneTime       boolean value indicating if WebSocket must be closed (true) or not
-     *                      (false) after the response
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param accounts
+     *            list with the accounts to retrieve
+     * @param oneTime
+     *            boolean value indicating if WebSocket must be closed (true) or
+     *            not (false) after the response
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
-    public GetAccounts(List<UserAccount> accounts, boolean oneTime, WitnessResponseListener listener){
+    public GetAccounts(List<UserAccount> accounts, boolean oneTime, WitnessResponseListener listener) {
         super(listener);
         this.userAccounts = accounts;
         this.mOneTime = oneTime;
         this.mListener = listener;
     }
-
+    
     /**
-     * Using this constructor the WebSocket connection closes after the response. (Account based)
+     * Using this constructor the WebSocket connection closes after the
+     * response. (Account based)
      *
-     * @param accountId     ID of the account to retrieve
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param accountId
+     *            ID of the account to retrieve
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
-    public GetAccounts(String accountId, WitnessResponseListener listener){
+    public GetAccounts(String accountId, WitnessResponseListener listener) {
         this(accountId, true, listener);
     }
-
+    
     /**
-     * Using this constructor the WebSocket connection closes after the response. (Account List
-     * based)
+     * Using this constructor the WebSocket connection closes after the
+     * response. (Account List based)
      *
-     * @param accounts      list with the accounts to retrieve
-     * @param listener      A class implementing the WitnessResponseListener interface. This should
-     *                      be implemented by the party interested in being notified about the
-     *                      success/failure of the operation.
+     * @param accounts
+     *            list with the accounts to retrieve
+     * @param listener
+     *            A class implementing the WitnessResponseListener interface.
+     *            This should be implemented by the party interested in being
+     *            notified about the success/failure of the operation.
      */
-    public GetAccounts(List<UserAccount> accounts, WitnessResponseListener listener){
+    public GetAccounts(List<UserAccount> accounts, WitnessResponseListener listener) {
         this(accounts, true, listener);
     }
-
+    
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
         ArrayList<Serializable> params = new ArrayList();
         ArrayList<Serializable> accountIds = new ArrayList();
-        if(accountId == null){
-            for(UserAccount account : userAccounts) {
+        if (accountId == null) {
+            for (UserAccount account : userAccounts) {
                 accountIds.add(account.getObjectId());
             }
-        }else{
+        } else {
             accountIds.add(accountId);
         }
         params.add(accountIds);
         ApiCall getAccountByAddress = new ApiCall(0, RPC.CALL_GET_ACCOUNTS, params, RPC.VERSION, (int) requestId);
         websocket.sendText(getAccountByAddress.toJsonString());
     }
-
+    
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        System.out.println("<<< "+frame.getPayloadText());
+        System.out.println("<<< " + frame.getPayloadText());
         String response = frame.getPayloadText();
         GsonBuilder builder = new GsonBuilder();
-
-        Type GetAccountByAddressResponse = new TypeToken<WitnessResponse<List<AccountProperties>>>() {}.getType();
+        
+        Type GetAccountByAddressResponse = new TypeToken<WitnessResponse<List<AccountProperties>>>() {
+        }.getType();
         builder.registerTypeAdapter(Authority.class, new Authority.AuthorityDeserializer());
         builder.registerTypeAdapter(AccountOptions.class, new AccountOptions.AccountOptionsDeserializer());
-        WitnessResponse<List<AccountProperties>> witnessResponse = builder.create().fromJson(response, GetAccountByAddressResponse);
-
+        WitnessResponse<List<AccountProperties>> witnessResponse = builder.create().fromJson(response,
+                GetAccountByAddressResponse);
+        
         if (witnessResponse.error != null) {
             this.mListener.onError(witnessResponse.error);
         } else {
             this.mListener.onSuccess(witnessResponse);
         }
-        if(mOneTime){
+        if (mOneTime) {
             websocket.disconnect();
         }
     }
-
+    
     @Override
     public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            System.out.println(">>> "+frame.getPayloadText());
+        if (frame.isTextFrame())
+            System.out.println(">>> " + frame.getPayloadText());
     }
 }

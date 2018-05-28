@@ -5,20 +5,30 @@ Some useful docs on logback:
 http://logback.qos.ch/manual/receivers.html
 http://logback.qos.ch/manual/appenders.html
 http://logback.qos.ch/manual/configuration.html
--->
-<configuration scan="true" scanPeriod="30 seconds" packagingData="true">
-    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C:\\repos\\omega-governance-sombero\\today-utc0.log</file>
-        <!--<file>daylog.log</file>-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <!-- rollover daily -->
-            <fileNamePattern>C:\\repos\\omega-governance-sombero\\logs-archive\\%d{yyyy/MM, aux}\\day-utc0-%i-%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- each file should be at most 100MB, keep 30 days' worth of history capped at 3GB total size -->
-            <maxFileSize>300KB</maxFileSize>
-            <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
-        </rollingPolicy>
-        <encoder>
+--> 
+<configuration scan="true" scanPeriod="30 seconds" packagingData="true"> 
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
+        <file>
+            C:\\repos\\omega-governance-sombero\\today-utc0.log
+        </file> 
+        <!--<file>daylog.log</file>--> 
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"> 
+            <!-- rollover daily --> 
+            <fileNamePattern>
+                C:\\repos\\omega-governance-sombero\\logs-archive\\%d{yyyy/MM, aux}\\day-utc0-%i-%d{yyyy-MM-dd}.log
+            </fileNamePattern> 
+            <!-- each file should be at most 100MB, keep 30 days' worth of history capped at 3GB total size --> 
+            <maxFileSize>
+                300KB
+            </maxFileSize> 
+            <maxHistory>
+                30
+            </maxHistory> 
+            <totalSizeCap>
+                3GB
+            </totalSizeCap> 
+        </rollingPolicy> 
+        <encoder> 
             <!-- http://www.timeanddate.com/time/aboututc.html
             UTC+0 = GMT+0 ; London can be GMT or GMT+1 depending on DST
             This is log generator that generate log messages using time in specific timezone that is
@@ -27,24 +37,22 @@ http://logback.qos.ch/manual/configuration.html
             to parse log messages in Otros(file is part of this project for easy copy):
             https://github.com/otros-systems/otroslogviewer/wiki/Log4jPatternLayout
             http://stackoverflow.com/questions/144807/java-log-viewer
-            -->
-            <pattern>%-5level %date{dd MMM yyyy;HH:mm:ss.SSS, UTC} [%thread] %logger %msg%n</pattern>
-        </encoder>
-    </appender>
-
-
+            --> 
+            <pattern>
+                %-5level %date{dd MMM yyyy;HH:mm:ss.SSS, UTC} [%thread] %logger %msg%n
+            </pattern> 
+        </encoder> 
+    </appender> 
     <!-- Can start socket server in Otros and connect to port with this appender.
-    Also must add it as appender-ref in ROOT logger-->
-    <!--<appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">-->
-    <!--<remoteHost>localhost</remoteHost>-->
-    <!--<port>50505</port>-->
-    <!--<reconnectionDelay>10000</reconnectionDelay>-->
-    <!--<includeCallerData>true</includeCallerData>-->
-    <!--</appender>-->
-
-    <root level="DEBUG">
-        <!--<appender-ref ref="SOCKET"/>-->
-        <appender-ref ref="ROLLING"/>
-    </root>
-
+    Also must add it as appender-ref in ROOT logger--> 
+    <!--<appender name="SOCKET" class="ch.qos.logback.classic.net.SocketAppender">--> 
+    <!--<remoteHost>localhost</remoteHost>--> 
+    <!--<port>50505</port>--> 
+    <!--<reconnectionDelay>10000</reconnectionDelay>--> 
+    <!--<includeCallerData>true</includeCallerData>--> 
+    <!--</appender>--> 
+    <root level="DEBUG"> 
+        <!--<appender-ref ref="SOCKET"/>--> 
+        <appender-ref ref="ROLLING" /> 
+    </root> 
 </configuration>

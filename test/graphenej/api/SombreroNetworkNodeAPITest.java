@@ -51,7 +51,7 @@ public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
         } catch (RepeatedRequestIdException e) {
             System.out.println("RepeatedRequestIdException. Msg: " + e.getMessage());
         }
-
+        
         Timer timer = new Timer();
         timer.schedule(releaseTask, 7000);
         try {
@@ -86,14 +86,14 @@ public class SombreroNetworkNodeAPITest extends BaseSombreroApiTest {
             System.out.println("onError");
         }
     };
-
-
+    
     /**
      * Task that will release the worker thread, effectively terminating this
      * test
      */
     private TimerTask releaseTask = new TimerTask() {
-        @Override public void run() {
+        @Override
+        public void run() {
             System.out.println("Releasing lock!");
             synchronized (SombreroNetworkNodeAPITest.this) {
                 SombreroNetworkNodeAPITest.this.notifyAll();

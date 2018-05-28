@@ -17,15 +17,16 @@ import java.util.logging.Level;
 public class Main extends Application {
     
     public static Color BACKGROUND_FILL = Color.valueOf("#2A2E37");
-
-    //init logger in user settings folder
-    public static Logger logger = LoggerUtils.createLoggerFor("main", ManageLocalStorage.applicationDir.resolve("omega.log").toFile().getAbsolutePath());
-
+    
+    // init logger in user settings folder
+    public static Logger logger = LoggerUtils.createLoggerFor("main",
+            ManageLocalStorage.applicationDir.resolve("omega.log").toFile().getAbsolutePath());
+    
     @Override
     public void start(Stage stage) throws Exception {
         
         // if we have a password file already created in local storage with just
-            // load the main app
+        // load the main app
         
         if (ManageLocalStorage.passwordFileExists()) {
             Parent parent = FXMLLoader.load(getClass().getResource("/network/omega/ui/main/main.fxml"));
@@ -57,7 +58,7 @@ public class Main extends Application {
         // new Thread(() -> {
         // DatabaseHandler.getInstance();
         // }).start();
-
+        
     }
     
     public static void main(String[] args) {

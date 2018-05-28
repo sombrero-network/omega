@@ -174,7 +174,7 @@ public class MainController implements Initializable, BookReturnCallback {
                     }));
         } catch (RepeatedRequestIdException e) {
             e.printStackTrace();
-            Main.logger.error( "IOException", e);
+            Main.logger.error("IOException", e);
         }
         
     }
@@ -357,7 +357,7 @@ public class MainController implements Initializable, BookReturnCallback {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Main.logger.error( "IOException", e);
+            Main.logger.error("IOException", e);
         }
         
     }
@@ -696,7 +696,7 @@ public class MainController implements Initializable, BookReturnCallback {
                     }));
         } catch (RepeatedRequestIdException e) {
             e.printStackTrace();
-            Main.logger.error( "IOException", e);
+            Main.logger.error("IOException", e);
         }
     }
 }

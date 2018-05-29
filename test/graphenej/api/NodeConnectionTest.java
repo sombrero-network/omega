@@ -119,6 +119,40 @@ public class NodeConnectionTest {
     }
     
     @Test
+    public void testSortedByLatencyNodeConnection() {
+        System.out.println("** Testing simple node connection order by latency test**");
+        nodeConnection = NodeConnection.getInstance();
+        nodeConnection.addNodeUrl(NODE_URL_1);
+        nodeConnection.addNodeUrl(NODE_URL_2);
+        nodeConnection.addNodeUrl(NODE_URL_5);
+        
+        // bitshare top node list 
+        nodeConnection.addNodeUrl("wss://eu.openledger.info/ws");
+        nodeConnection.addNodeUrl("wss://bitshares.crypto.fans/ws");
+        nodeConnection.addNodeUrl("wss://openledger.hk/ws");
+        nodeConnection.addNodeUrl("wss://api.bitshares.bhuz.info/ws");
+        nodeConnection.addNodeUrl("wss://ws.gdex.top");
+        
+        // TODO add more nodes to test
+        nodeConnection.orderNodeListBylatency();
+        
+        nodeConnection.connect("", "", true, mErrorListener);
+        
+        Timer timer = new Timer();
+        timer.schedule(getAccountsTask, 5000);
+        timer.schedule(releaseTask, 30000);
+        
+        try {
+            // Holding this thread while we get update notifications
+            synchronized (this) {
+                wait();
+            }
+        } catch (InterruptedException e) {
+            System.out.println("InterruptedException. Msg: " + e.getMessage());
+        }
+    }
+    
+    @Test
     public void testWrongUrl() {
         System.out.println("** Testing simple node connection with wrong URL **");
         nodeConnection = NodeConnection.getInstance();

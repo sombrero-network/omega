@@ -1,14 +1,26 @@
 package cy.agorise.graphenej.api.android;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import cy.agorise.graphenej.api.BaseGrapheneHandler;
 import cy.agorise.graphenej.api.SubscriptionMessagesHub;
 import cy.agorise.graphenej.errors.RepeatedRequestIdException;
 import cy.agorise.graphenej.interfaces.NodeErrorListener;
 import cy.agorise.graphenej.models.BaseResponse;
-import javafx.scene.control.Label;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Class used to encapsulate all connections that should be done to a node (with
@@ -105,9 +117,6 @@ public class NodeConnection {
     };
     
     /**
-    
-     */
-    /**
      * Method that will try to connect to one of the nodes. If the connection
      * fails a subsequent call to this method will try to connect with the next
      * node in the list if there is one.
@@ -158,4 +167,58 @@ public class NodeConnection {
         requestCounter++;
         mMessagesHub.addRequestHandler(handler);
     }
+    
+    public Map<String, Long> orderUrlsBylatency() {
+        Map<String, Long> resultUrlMap = new LinkedHashMap<String, Long>();
+        
+        int timeoutMillis = 3000;
+        
+        for (String url : mUrlList) {
+            InetAddress address;
+            Long latency = 3000L;
+            try {
+                address = InetAddress.getByName(new URL(url.replace("wss://", "http://")).getHost());
+                
+                long start = System.currentTimeMillis();
+                
+                Boolean isReachable = address.isReachable(timeoutMillis);
+                
+                long stop = System.currentTimeMillis();
+                
+                if (isReachable) {
+                    latency = stop - start;
+                }
+                
+                resultUrlMap.put(url, latency);
+                
+            } catch (UnknownHostException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            
+        }
+        
+        Map<String, Long> orderedResultMap = resultUrlMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.naturalOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (x, y) -> {
+                    throw new AssertionError();
+                }, LinkedHashMap::new));
+        
+        // order by low latency
+        return orderedResultMap;
+    }
+    
+    public void orderNodeListBylatency() {
+        Map<String, Long> orderedResultMap = orderUrlsBylatency();
+        mUrlList.clear();
+        mUrlList.addAll(orderedResultMap.keySet());
+        mUrlIndex = 0;
+        
+        // debug
+        for (int i = 0; i < orderedResultMap.size(); i++) {
+            System.out.println(mUrlList.get(i) + "-> " + orderedResultMap.get(mUrlList.get(i)));
+        }
+    }
+    
 }

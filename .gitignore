@@ -3,6 +3,12 @@
 /derby.log
 /out
 /config.txt
+/.classpath*
+/.project*
+/.settings*
+/.settings/org.eclipse.jdt.ui.prefs
+/.settings/org.eclipse.m2e.core.prefs
+
 /lib/.*zip
 /lib/sdk/
 /*.log

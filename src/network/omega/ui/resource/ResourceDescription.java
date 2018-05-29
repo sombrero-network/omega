@@ -25,7 +25,7 @@ public class ResourceDescription {
     // minimal big files read/write speed (100MBs/80Mbs)
     public int minBigFilesReadSpeed;
     public int minBigFilesWriteSpeed;
-    
+
     // host system requirements
     // free disk space (12.5GB)
     public float freeDiskRequired;
@@ -33,25 +33,25 @@ public class ResourceDescription {
     public float freeRamRequired;
     // min cpu cores
     public int minCPUCoresRequired;
-    
+
     private String clean(String source) {
         return source.toLowerCase().replace("mb", "").replace("mbs", "").replace("gb", "").replace("s", "");
     }
-    
+
     private String readJsonLineString(JSONObject mainJsonObj, String level1, String level2) {
         return (String) ((JSONObject) mainJsonObj.get(level1)).get(level2);
     }
-    
+
     private int readJsonLineInt(JSONObject mainJsonObj, String level1, String level2) {
         return Integer.parseInt(clean((String) ((JSONObject) mainJsonObj.get(level1)).get(level2)));
     }
-    
+
     private float readJsonLineFloat(JSONObject mainJsonObj, String level1, String level2) {
         return Float.parseFloat(clean((String) ((JSONObject) mainJsonObj.get(level1)).get(level2)));
     }
-    
+
     public void parse(Asset a) {
-        
+
         String jsonStr = a.getAssetOptions().getDescription();
         JSONObject obj = new JSONObject(jsonStr.replace("\\n", ""));
         if (obj instanceof JSONObject) {
@@ -59,20 +59,20 @@ public class ResourceDescription {
             JSONObject mainJsonObj = new JSONObject(mainJsonStr);
             descriptionOS = readJsonLineString(mainJsonObj, "de", "o");
             descriptionInstalled = readJsonLineString(mainJsonObj, "de", "i");
-            
+
             numberOfCores = readJsonLineInt(mainJsonObj, "c", "c");
             coreMinBenchmark = readJsonLineInt(mainJsonObj, "c", "b");
             ramSize = readJsonLineInt(mainJsonObj, "r", "s");
             ramMinSpeed = readJsonLineInt(mainJsonObj, "r", "ms");
             diskSize = readJsonLineInt(mainJsonObj, "d", "s");
-            
+
             String[] minSmallFiles = ((String) ((JSONObject) mainJsonObj.get("d")).get("msfs")).split("/");
             minSmallFilesReadSpeed = Integer.parseInt(clean(minSmallFiles[0]));
             minSmallFilesWriteSpeed = Integer.parseInt(clean(minSmallFiles[1]));
             String[] minBigFiles = ((String) ((JSONObject) mainJsonObj.get("d")).get("mbfs")).split("/");
             minBigFilesReadSpeed = Integer.parseInt(clean(minBigFiles[0]));
             minBigFilesWriteSpeed = Integer.parseInt(clean(minBigFiles[1]));
-            
+
             freeDiskRequired = readJsonLineFloat(mainJsonObj, "h", "s");
             freeRamRequired = readJsonLineFloat(mainJsonObj, "h", "r");
             minCPUCoresRequired = readJsonLineInt(mainJsonObj, "h", "c");
@@ -81,9 +81,26 @@ public class ResourceDescription {
             name = descriptionOS + " - " + a.getSymbol().replace("RESOURCE", "");
         }
     }
-    
-    @Override
-    public String toString() {
+
+    public ResourceDescription add(ResourceDescription rd) {
+        this.numberOfCores += rd.numberOfCores;
+        this.coreMinBenchmark += rd.coreMinBenchmark;
+        this.ramSize += rd.ramSize;
+        this.ramMinSpeed += rd.ramMinSpeed;
+        this.diskSize += rd.diskSize;
+        this.minSmallFilesReadSpeed += rd.minSmallFilesReadSpeed;
+        this.minSmallFilesWriteSpeed += rd.minSmallFilesWriteSpeed;
+        this.minBigFilesReadSpeed += rd.minBigFilesReadSpeed;
+        this.minBigFilesWriteSpeed += rd.minBigFilesWriteSpeed;
+
+        this.freeDiskRequired += rd.freeDiskRequired;
+        this.freeRamRequired += rd.freeRamRequired;
+        this.minCPUCoresRequired += rd.minCPUCoresRequired;
+
+        return this;
+    }
+
+    @Override public String toString() {
         return "descriptionOS='" + descriptionOS + '\'' + "\ndescriptionInstalled='" + descriptionInstalled + '\''
                 + "\nnumberOfCores=" + numberOfCores + "\ncoreMinBenchmark=" + coreMinBenchmark + "\nramSize=" + ramSize
                 + "\nramMinSpeed=" + ramMinSpeed + "\ndiskSize=" + diskSize + "\nminSmallFilesReadSpeed="

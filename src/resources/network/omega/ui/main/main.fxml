@@ -9,26 +9,55 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <!--stylesheets="@../../../../resources/dark-theme.css"-->
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.MainController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1000.0" stylesheets="@/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.MainController">
    <children>
       <JFXDrawer fx:id="drawer" defaultDrawerSize="150.0" resizableOnDrag="true" resizeContent="true" styleClass="jfx-drawer" />
       <AnchorPane fx:id="rootAnchorPane" prefHeight="200.0" prefWidth="200.0">
          <children>
             <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                <children>
-                  <JFXTabPane fx:id="mainTabPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <JFXTabPane fx:id="mainTabPane" tabMaxWidth="200.0" tabMinWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
                          <Tab fx:id="providedTab" text="Provided Resources">
                              <content>
                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                      <children>
-                                         <JFXButton AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="20.0" onAction="#handleAddMyResource" styleClass="circle-button" text="+" />
+                                        <TableView fx:id="providerResourcesTable" layoutX="7.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <columns>
+                                                <!-- Name(Generated), OS, Cores, RAM, DISK, VM -->
+                                                <TableColumn fx:id="providerResourcesNameColumn" prefWidth="180" text="Name" />
+                                                <TableColumn fx:id="providerResourcesOSColumn" prefWidth="180" text="OS" />
+                                                <TableColumn fx:id="providerResourcesCoresColumn" prefWidth="100" text="Cores" />
+                                                <TableColumn fx:id="providerResourcesRamColumn" prefWidth="100" text="RAM" />
+                                                <TableColumn fx:id="providerResourcesDiskColumn" prefWidth="100" text="DISK" />
+                                                <TableColumn fx:id="providerResourcesVMColumn" prefWidth="100" text="VM" />
+                                                <!--<TableColumn fx:id="providerResourcesDoubleColumn" minWidth="0.0" prefWidth="149.0" text="Order" />-->
+                                            </columns>
+                                        </TableView>
+                                         <JFXButton onAction="#handleAddMyResource" styleClass="circle-button" text="Add" AnchorPane.bottomAnchor="100.0" AnchorPane.rightAnchor="25.0" />
+                                         <JFXButton onAction="#handleRemoveMyResource" styleClass="circle-button" text="Remove" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="25.0" />
+                                         <JFXButton onAction="#handleStartMyResource" styleClass="circle-button" text="Start" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="25.0" />
+                                    <HBox fx:id="emptyTabelLabel" layoutX="493.0" layoutY="400.0" prefHeight="58.0" prefWidth="370.0">
+                                       <children>
+                                          <Label prefHeight="47.0" prefWidth="319.0" text="Add some resources to provide" textFill="WHITE" />
+                                          <ImageView fitHeight="52.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@/if_arrow-right-01_186409.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
                                      </children>
                                  </AnchorPane>
                              </content>
@@ -57,7 +86,7 @@
                          </Tab>
                      </tabs>
                   </JFXTabPane>
-                  <JFXHamburger fx:id="hamburger" styleClass="jfx-hamburger-icon" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="75.0" />
+                  <JFXHamburger fx:id="hamburger" styleClass="jfx-hamburger-icon" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="20.0" />
                </children>
             </AnchorPane>
             <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

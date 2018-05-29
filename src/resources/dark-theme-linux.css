@@ -64,8 +64,8 @@
 }
 .tab {
     -fx-background-color: -fx-primary;
-    -fx-pref-width: 350;
-    -fx-pref-height: 60;
+    -fx-pref-width: 200;
+    -fx-pref-height: 50;
     -fx-font-family: "SansSerif Bold"
 }
 .tab-header-background {
@@ -136,9 +136,9 @@
     -fx-text-fill: white;
     -fx-font-family: "SansSerif Bold"
 }
-.jfx-layout-actions {
-    -fx-hgap: 8
-}
+/*.jfx-layout-actions {*/
+    /*-fx-hgap: 8*/
+/*}*/
 .data0.chart-pie {
     -fx-pie-color: -fx-secondary;
     -fx-border-color: derive(-fx-secondary, -30%)
@@ -176,7 +176,8 @@
 }
 .table-view .column-header-background .label {
     -fx-background-color: transparent;
-    -fx-text-fill: white
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
 }
 .table-view .column-header {
     -fx-background-color: transparent
@@ -237,14 +238,25 @@
 .jfx-layout-body, .jfx-layout-actions {
     -fx-background-color: -fx-primary
 }
-.jfx-layout-body .label {
-    -fx-text-fill: white;
-    -fx-padding: 20px 0 0 0;
-    -fx-font-family: "SansSerif Bold"
-}
+/*.jfx-layout-body .label {*/
+    /*-fx-text-fill: white;*/
+    /*-fx-padding: 20px 0 0 0;*/
+    /*-fx-font-family: "SansSerif Bold"*/
+/*}*/
 .not-available {
     -fx-background-radius: 5px;
     -fx-fill: derive(blue, 80%);
     -fx-cursor: hand;
     -fx-font-family: "SansSerif Bold"
+}
+
+/* table view */
+.table-row-cell .price-cell {
+    -fx-text-fill: orangered;
+    -fx-font-family: "SansSerif Bold"
+}
+.table-row-cell:caution .price-cell {
+    -fx-background-color: #b8ee36;
+    -fx-text-fill: orangered;
+    -fx-font-family: "SansSerif Bold";
 }

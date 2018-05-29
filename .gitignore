@@ -12,3 +12,4 @@
 /lib/.*zip
 /lib/sdk/
 /*.log
+/logs-archive/**

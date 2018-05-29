@@ -258,17 +258,20 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <!-- Formatter example configs: https://code.revelc.net/formatter-maven-plugin/examples.html -->
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
                 <artifactId>formatter-maven-plugin</artifactId>
                 <version>2.7.3</version>
                 <configuration>
+                    <lineEnding>CRLF</lineEnding>
                     <directories>
                         <directory>${project.basedir}/src</directory>
                         <directory>${project.basedir}/test</directory>
                     </directories>
                     <excludes>
                         <exclude>**/*.json</exclude>
+                        <exclude>**/*.css</exclude>
                     </excludes>
                     <encoding>UTF-8</encoding>
                     <configFile>${project.basedir}/code-formating/eclipse-oxige3a-Java-Code-Formatting.xml</configFile>

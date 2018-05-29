@@ -3,3 +3,6 @@
 /derby.log
 /out
 /config.txt
+/lib/.*zip
+/lib/sdk/
+/*.log

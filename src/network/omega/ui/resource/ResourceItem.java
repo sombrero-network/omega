@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class ResourceItem implements Comparable<ResourceItem> {
     public ResourceDescription rd;
-
+    
     private ReadOnlyBooleanWrapper caution;
     public StringProperty name;
     public StringProperty os;
@@ -15,18 +15,15 @@ public class ResourceItem implements Comparable<ResourceItem> {
     public StringProperty ram;
     public StringProperty disk;
     public StringProperty vm;
-
-
-
-
+    
     public DoubleProperty doubleVal;
-
+    
     public ResourceItem() {
         
     }
-
-    public ResourceItem(String name, String os, String cores, String ram,
-            String disk, String vm, ResourceDescription rd) {
+    
+    public ResourceItem(String name, String os, String cores, String ram, String disk, String vm,
+            ResourceDescription rd) {
         this.name = new SimpleStringProperty(name);
         this.os = new SimpleStringProperty(os);
         this.cores = new SimpleStringProperty(cores);
@@ -35,11 +32,11 @@ public class ResourceItem implements Comparable<ResourceItem> {
         this.vm = new SimpleStringProperty(vm);
         this.rd = rd;
     }
-
+    
     public ResourceItem(String name, Double doubleVal) {
         this.name = new SimpleStringProperty(name);
         this.doubleVal = new SimpleDoubleProperty(doubleVal);
-
+        
         // trigger css style on table cell level
         this.caution = new ReadOnlyBooleanWrapper();
         this.caution.bind(this.doubleVal.lessThan(1.0d));

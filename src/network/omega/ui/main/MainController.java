@@ -49,6 +49,7 @@ import network.omega.ui.preferences.ManageLocalStorage;
 import network.omega.ui.resource.EditingDoubleCell;
 import network.omega.ui.resource.ResourceController;
 import network.omega.ui.resource.ResourceItem;
+import network.omega.ui.resource.vm.ResourceLauncher;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -59,6 +60,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -137,10 +139,10 @@ public class MainController implements Initializable, BookReturnCallback {
     private JFXTabPane mainTabPane;
     @FXML
     private Label testJsonContainer;
-
+    
     @FXML
     public HBox emptyTabelLabel;
-
+    
     @FXML
     private TableView<ResourceItem> providerResourcesTable;
     @FXML
@@ -155,9 +157,14 @@ public class MainController implements Initializable, BookReturnCallback {
     private TableColumn<ResourceItem, String> providerResourcesDiskColumn;
     @FXML
     private TableColumn<ResourceItem, String> providerResourcesVMColumn;
-//    @FXML
-//    private TableColumn<ResourceItem, Double> providerResourcesDoubleColumn;
-
+    // @FXML
+    // private TableColumn<ResourceItem, Double> providerResourcesDoubleColumn;
+    
+    @FXML
+    private ProgressBar providerResourcesProgressBar;
+    @FXML
+    private Label providerResourcesProgressBarDescr;
+    
     public ObservableList<ResourceItem> providerResourcesList;
     
     private Timeline timeline;
@@ -175,29 +182,31 @@ public class MainController implements Initializable, BookReturnCallback {
     public void testObservableDataAndTableView() {
         Runnable task = () -> {
             try {
-                //providerResourcesList.add(new ResourceItem("Added new", new Random().nextDouble()));
+                // providerResourcesList.add(new ResourceItem("Added new", new
+                // Random().nextDouble()));
                 // change all value of existing rows for table view to update
-//                for (ResourceItem c : providerResourcesList) {
-//                    c.setDoubleVal(new Random().nextDouble());
-//                }
-//
+                // for (ResourceItem c : providerResourcesList) {
+                // c.setDoubleVal(new Random().nextDouble());
+                // }
+                //
                 // add or remove some data
-//                for (ResourceItem c : providerResourcesList) {
-//                    if (c.getDoubleVal() < 0.5d) {
-//                        providerResourcesList.remove(c);
-//                        break;
-//                    } else {
-//                        providerResourcesList.add(new ResourceItem("Added new", new Random().nextDouble()));
-//                        break;
-//                    }
-//                }
-
-                providerResourcesList.add(new ResourceItem("dasfdsfse342344f",
-                        "ubuntut 16.04 - x64", "2", "1.5GB", "15GB", "c:\\", null));
-                //                        break;
+                // for (ResourceItem c : providerResourcesList) {
+                // if (c.getDoubleVal() < 0.5d) {
+                // providerResourcesList.remove(c);
+                // break;
+                // } else {
+                // providerResourcesList.add(new ResourceItem("Added new", new
+                // Random().nextDouble()));
+                // break;
+                // }
+                // }
+                
+                providerResourcesList.add(new ResourceItem("dasfdsfse342344f", "ubuntut 16.04 - x64", "2", "1.5GB",
+                        "15GB", "c:\\", null));
+                // break;
                 
                 // sort data
-                //providerResourcesList.sort((be1, be2) -> be1.compareTo(be2));
+                // providerResourcesList.sort((be1, be2) -> be1.compareTo(be2));
             } catch (Exception e) {
                 return;
             }
@@ -219,16 +228,12 @@ public class MainController implements Initializable, BookReturnCallback {
         // System.out.println("test");
         // currentTimeLabel.setText(LocalDateTime.now().format(timeFormatter));
     }
-
-
-
-
+    
     private void configureProviderResourcesTable() {
         
         // define if table is editable
         providerResourcesTable.setEditable(false);
-
-
+        
         // map model to controller columns and define factory for cell
         // editing/viewing
         providerResourcesNameColumn.setCellValueFactory(cellData -> cellData.getValue().name);
@@ -237,79 +242,89 @@ public class MainController implements Initializable, BookReturnCallback {
         providerResourcesRamColumn.setCellValueFactory(cellData -> cellData.getValue().ram);
         providerResourcesDiskColumn.setCellValueFactory(cellData -> cellData.getValue().disk);
         providerResourcesVMColumn.setCellValueFactory(cellData -> cellData.getValue().vm);
-
-//        providerResourcesDoubleColumn.setCellValueFactory(cellData -> cellData.getValue().doubleVal.asObject());
-       // providerResourcesDoubleColumn.setCellFactory(col -> new EditingDoubleCell("price-cell"));
+        
+        // providerResourcesDoubleColumn.setCellValueFactory(cellData ->
+        // cellData.getValue().doubleVal.asObject());
+        // providerResourcesDoubleColumn.setCellFactory(col -> new
+        // EditingDoubleCell("price-cell"));
         
         // custom css style class for table row defined table.css :
         // ".table-row-cell:caution"
-//        PseudoClass caution = PseudoClass.getPseudoClass("caution");
-//        providerResourcesTable.setRowFactory(tv -> {
-//            TableRow<ResourceItem> row = new TableRow<>();
-//
-//            ChangeListener<Boolean> cautionListener = (obs, wasCaution, isNowCaution) -> row
-//                    .pseudoClassStateChanged(caution, isNowCaution);
-//
-//            row.itemProperty().addListener((obs, oldEvent, newEvent) -> {
-//                if (oldEvent != null) {
-//                    oldEvent.cautionProperty().removeListener(cautionListener);
-//                }
-//                if (newEvent == null) {
-//                    row.pseudoClassStateChanged(caution, false);
-//                } else {
-//                    row.pseudoClassStateChanged(caution, newEvent.isCaution());
-//                    newEvent.cautionProperty().addListener(cautionListener);
-//                }
-//            });
-//
-//            return row;
-//        });
-
-
+        // PseudoClass caution = PseudoClass.getPseudoClass("caution");
+        // providerResourcesTable.setRowFactory(tv -> {
+        // TableRow<ResourceItem> row = new TableRow<>();
+        //
+        // ChangeListener<Boolean> cautionListener = (obs, wasCaution,
+        // isNowCaution) -> row
+        // .pseudoClassStateChanged(caution, isNowCaution);
+        //
+        // row.itemProperty().addListener((obs, oldEvent, newEvent) -> {
+        // if (oldEvent != null) {
+        // oldEvent.cautionProperty().removeListener(cautionListener);
+        // }
+        // if (newEvent == null) {
+        // row.pseudoClassStateChanged(caution, false);
+        // } else {
+        // row.pseudoClassStateChanged(caution, newEvent.isCaution());
+        // newEvent.cautionProperty().addListener(cautionListener);
+        // }
+        // });
+        //
+        // return row;
+        // });
+        
         // add selection / unselection feature
         providerResourcesTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //providerResourcesTable.getSelectionModel().setCellSelectionEnabled(true);
+        // providerResourcesTable.getSelectionModel().setCellSelectionEnabled(true);
         // http://stackoverflow.com/questions/19490868/how-to-unselect-a-selected-table-row-upon-second-click-selection-in-javafx
-//        providerResourcesTable.setRowFactory(new Callback<TableView<ResourceItem>, TableRow<ResourceItem>>() {
-//            @Override
-//            public TableRow<ResourceItem> call(TableView<ResourceItem> tableView2) {
-//                final TableRow<ResourceItem> row = new TableRow<>();
-//                row.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-//                    @Override
-//                    public void handle(MouseEvent event) {
-//                        final int index = row.getIndex();
-//                        if (index >= 0 && index < providerResourcesTable.getItems().size()
-//                                && providerResourcesTable.getSelectionModel().isSelected(index)) {
-////                            System.out.println("Unselected: "
-////                                    + providerResourcesTable.getSelectionModel().getSelectedItem().getDoubleVal());
-////                            System.out.println(
-////                                    "Unselected: " + providerResourcesTable.getSelectionModel().getSelectedIndex());
-//                            // tableView.getSelectionModel().clearSelection();//unselect
-//                            // all
-//                            providerResourcesTable.getSelectionModel().clearSelection(index);// unselect
-//                                                                                             // only
-//                                                                                             // selected
-//                            event.consume();
-//                        } else {
-//                            providerResourcesTable.getSelectionModel().select(index);
-////                            System.out.println("Selected: "
-////                                    + providerResourcesTable.getSelectionModel().getSelectedItem().getDoubleVal());
-////                            System.out.println(
-////                                    "Selected: " + providerResourcesTable.getSelectionModel().getSelectedIndex());
-//                        }
-//                    }
-//                });
-//                return row;
-//            }
-//        });
+        // providerResourcesTable.setRowFactory(new
+        // Callback<TableView<ResourceItem>, TableRow<ResourceItem>>() {
+        // @Override
+        // public TableRow<ResourceItem> call(TableView<ResourceItem>
+        // tableView2) {
+        // final TableRow<ResourceItem> row = new TableRow<>();
+        // row.addEventFilter(MouseEvent.MOUSE_PRESSED, new
+        // EventHandler<MouseEvent>() {
+        // @Override
+        // public void handle(MouseEvent event) {
+        // final int index = row.getIndex();
+        // if (index >= 0 && index < providerResourcesTable.getItems().size()
+        // && providerResourcesTable.getSelectionModel().isSelected(index)) {
+        //// System.out.println("Unselected: "
+        //// +
+        // providerResourcesTable.getSelectionModel().getSelectedItem().getDoubleVal());
+        //// System.out.println(
+        //// "Unselected: " +
+        // providerResourcesTable.getSelectionModel().getSelectedIndex());
+        // // tableView.getSelectionModel().clearSelection();//unselect
+        // // all
+        // providerResourcesTable.getSelectionModel().clearSelection(index);//
+        // unselect
+        // // only
+        // // selected
+        // event.consume();
+        // } else {
+        // providerResourcesTable.getSelectionModel().select(index);
+        //// System.out.println("Selected: "
+        //// +
+        // providerResourcesTable.getSelectionModel().getSelectedItem().getDoubleVal());
+        //// System.out.println(
+        //// "Selected: " +
+        // providerResourcesTable.getSelectionModel().getSelectedIndex());
+        // }
+        // }
+        // });
+        // return row;
+        // }
+        // });
         
         // initialize table with on row selection event listener
         providerResourcesTable.getSelectionModel().selectedItemProperty()
                 .addListener((obs, oldSelection, newSelection) -> {
                     if (newSelection != null) {
-
+                        
                         if (oldSelection != null) {
-
+                            
                         }
                     }
                 });
@@ -322,8 +337,11 @@ public class MainController implements Initializable, BookReturnCallback {
         Main.logger.info("MainController initialized.");
         // databaseHandler = DatabaseHandler.getInstance();
         
+        providerResourcesProgressBarDescr.setVisible(false);
+        providerResourcesProgressBar.setVisible(false);
+        
         initDrawer();
-
+        
         // initGraphs();
         
         // get username and password from the file
@@ -363,39 +381,39 @@ public class MainController implements Initializable, BookReturnCallback {
         
         // init provider resources table
         providerResourcesList = FXCollections.observableArrayList(new ArrayList<ResourceItem>());
-        providerResourcesList.addListener(new ListChangeListener<ResourceItem>(){
-
+        providerResourcesList.addListener(new ListChangeListener<ResourceItem>() {
+            
             @Override
             public void onChanged(ListChangeListener.Change c) {
-                //System.out.println("\nonChanged()");
-
-                while(c.next()){
-//                    System.out.println("next: ");
-                    if(c.wasAdded()){
-                        //System.out.println("- wasAdded");
+                // System.out.println("\nonChanged()");
+                
+                while (c.next()) {
+                    // System.out.println("next: ");
+                    if (c.wasAdded()) {
+                        // System.out.println("- wasAdded");
                         manageEmptyTableState();
                     }
-//                    if(c.wasPermutated()){
-//                        System.out.println("- wasPermutated");
-//                    }
-                    if(c.wasRemoved()){
-                        //System.out.println("- wasRemoved");
+                    // if(c.wasPermutated()){
+                    // System.out.println("- wasPermutated");
+                    // }
+                    if (c.wasRemoved()) {
+                        // System.out.println("- wasRemoved");
                         manageEmptyTableState();
                     }
-//                    if(c.wasReplaced()){
-//                        System.out.println("- wasReplaced");
-//                    }
-//                    if(c.wasUpdated()){
-//                        System.out.println("- wasUpdated");
-//                    }
+                    // if(c.wasReplaced()){
+                    // System.out.println("- wasReplaced");
+                    // }
+                    // if(c.wasUpdated()){
+                    // System.out.println("- wasUpdated");
+                    // }
                 }
-
-//                for(Object i : providerResourcesList){
-//                    System.out.println(i);
-//                }
+                
+                // for(Object i : providerResourcesList){
+                // System.out.println(i);
+                // }
             }
         });
-
+        
         configureProviderResourcesTable();
         // testObservableDataAndTableView();
     }
@@ -856,25 +874,25 @@ public class MainController implements Initializable, BookReturnCallback {
         }
         rc.toFront();
     }
-
-    public void manageEmptyTableState(){
-        if(providerResourcesList.size() >0){
+    
+    public void manageEmptyTableState() {
+        if (providerResourcesList.size() > 0) {
             emptyTabelLabel.setVisible(false);
             providerResourcesTable.setVisible(true);
-        }else{
+        } else {
             emptyTabelLabel.setVisible(true);
             providerResourcesTable.setVisible(false);
         }
     }
     
     public long MILLIS_TO_PASS_BETWEEN_WSS_CONNECTIONS = 3L * 60L * 1000L; // 3
-                                                                           // *
-                                                                           // 60
-                                                                           // *
-                                                                           // 1000
-                                                                           // =
-                                                                           // 3
-                                                                           // min
+    // *
+    // 60
+    // *
+    // 1000
+    // =
+    // 3
+    // min
     public long wssLocked = 0L;
     
     public void lockWss() {
@@ -930,17 +948,30 @@ public class MainController implements Initializable, BookReturnCallback {
             Main.logger.error("IOException", e);
         }
     }
-
+    
     public void handleStartMyResource(ActionEvent actionEvent) {
-        System.out.println("resources were started");
-        List<ResourceItem> selectedResources =  providerResourcesTable.getSelectionModel().getSelectedItems();
-        for(ResourceItem cr : selectedResources){
-            System.out.println(cr.rd.ramMinSpeed);
-        }
+        Runnable task = () -> {
+            System.out.println("resources were started");
+            List<ResourceItem> selectedResources = providerResourcesTable.getSelectionModel().getSelectedItems();
+            
+            ResourceLauncher rc = new ResourceLauncher();
+            try {
+                rc.launchResources(providerResourcesProgressBar, providerResourcesProgressBarDescr, selectedResources);
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                Main.logger.error("ExecutionException", e);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Main.logger.error("InterruptedException", e);
+            }
+        };
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        executor.submit(task);
+        
     }
-
+    
     public void handleRemoveMyResource(ActionEvent actionEvent) {
-        List<ResourceItem> selectedResources =  providerResourcesTable.getSelectionModel().getSelectedItems();
+        List<ResourceItem> selectedResources = providerResourcesTable.getSelectionModel().getSelectedItems();
         providerResourcesList.removeAll(selectedResources);
     }
 }

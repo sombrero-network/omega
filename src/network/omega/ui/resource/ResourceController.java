@@ -34,44 +34,54 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class ResourceController implements Initializable, ControllerHooks {
-
-    @FXML private StackPane rootPane;
-
-    @FXML private JFXTextField searchResourceType;
-
-    @FXML private ListView searchResultResources;
-
-    @FXML private TextArea resourceDescription;
-
-    @FXML private Label selectDiskLabel;
-
-    @FXML private ListView disksList;
-
-    @FXML private Button saveButton;
-
-    @FXML private Label installedVBoxVersion;
-
+    
+    @FXML
+    private StackPane rootPane;
+    
+    @FXML
+    private JFXTextField searchResourceType;
+    
+    @FXML
+    private ListView searchResultResources;
+    
+    @FXML
+    private TextArea resourceDescription;
+    
+    @FXML
+    private Label selectDiskLabel;
+    
+    @FXML
+    private ListView disksList;
+    
+    @FXML
+    private Button saveButton;
+    
+    @FXML
+    private Label installedVBoxVersion;
+    
     private Tooltip errTooltip = new Tooltip();
-
+    
     private Stage stage = null;
-
+    
     public MainController mc;
-
+    
     SystemInfo si = new SystemInfo();
     HardwareAbstractionLayer hal = si.getHardware();
     OperatingSystem os = si.getOperatingSystem();
-
+    
     String vBoxInstalledVersion = null;
-
+    
     protected static NodeConnection nodeConnection;
     public HashMap<String, Asset> resourceTypesFetched;
     protected List<Asset> filteredResourceTypesBySearchedText = new ArrayList<>();
-
-    @Override public void setStage(Stage stage) {
+    
+    @Override
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    @Override public void initialize(URL location, ResourceBundle resources) {
+    
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         vBoxInstalledVersion = VBoxManager.getVirtualBoxInstalledVersion(hal);
         if (vBoxInstalledVersion != null) {
             installedVBoxVersion.setVisible(true);
@@ -82,17 +92,18 @@ public class ResourceController implements Initializable, ControllerHooks {
         selectDiskLabel.setText("Select the disk\nto store virtual\nmachine at");
         // update the available disks list to select only one
         updateDisksList(disksList);
-
+        
         // configure error tooltip
         errTooltip.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent event) {
+            @Override
+            public void handle(MouseEvent event) {
                 errTooltip.hide();
             }
         });
         Image image = new Image(getClass().getResourceAsStream("/if_stock_error-next_94134.png"));
         errTooltip.setGraphic(new ImageView(image));
     }
-
+    
     public Path getRootPath(FileStore fs) throws IOException {
         Path media = Paths.get("/media");
         if (media.isAbsolute() && Files.exists(media)) { // Linux
@@ -120,20 +131,20 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return null;
     }
-
+    
     private List<FileStore> currentDisksList = new ArrayList<>();
     private List<OSFileStore> currentDisksListMacLin = new ArrayList<>();
-
+    
     private void updateDisksList(ListView disksList) {
         // returns pathnames for files and directory
         // File[] paths;
         // FileSystemView fsv = FileSystemView.getFileSystemView();
         // paths = File.listRoots();
-
+        
         // for each pathname in pathname array
         currentDisksList.clear();
         List<String> disks = new ArrayList<>();
-
+        
         if (com.sun.jna.Platform.isWindows()) {
             for (Path root : FileSystems.getDefault().getRootDirectories()) {
                 // prints file and directory paths
@@ -145,8 +156,8 @@ public class ResourceController implements Initializable, ControllerHooks {
                         if (currentStore.name().contentEquals("")) {
                             diskName = getRootPath(currentStore).toFile().getAbsolutePath();
                         } else {
-                            diskName =
-                                    currentStore.name() + " - " + getRootPath(currentStore).toFile().getAbsolutePath();
+                            diskName = currentStore.name() + " - "
+                                    + getRootPath(currentStore).toFile().getAbsolutePath();
                         }
                         disks.add(diskName + " - " + currentStoreFreeSpaceInGB + " GB Free ");
                         currentDisksList.add(currentStore);
@@ -181,7 +192,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                     // System.out.println("Description: " +
                     // fsv.getSystemTypeDescription(path));
                 }
-
+                
                 // System.out.format(
                 // " %s (%s) [%s] %s of %s free (%.1f%%) is %s "
                 // + (fs.getLogicalVolume() != null &&
@@ -197,7 +208,7 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         disksList.setItems(FXCollections.observableList(disks));
     }
-
+    
     public ResourceDescription getResourceDescriptionForCurrentlySelectedType() {
         String selectedAsset = (String) searchResultResources.getSelectionModel().getSelectedItem();
         if (selectedAsset != null) {
@@ -211,7 +222,7 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return null;
     }
-
+    
     public FileStore getCurrentlySelectedDisk() {
         int selectedIndex = disksList.getSelectionModel().getSelectedIndex();
         if (selectedIndex != -1) {
@@ -224,7 +235,7 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return null;
     }
-
+    
     public OSFileStore getCurrentlySelectedDiskMacLin() {
         int selectedIndex = disksList.getSelectionModel().getSelectedIndex();
         if (selectedIndex != -1) {
@@ -237,17 +248,19 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return null;
     }
-
+    
     public String diskSizeIsValid(ResourceDescription aggregateResourceRequirement, Object currentlySelectedDisk) {
-        //apart from disk space reuired VDI images we also require to support RAM hibernation
-        float diskSpaceRequiredOnHost = aggregateResourceRequirement.diskSize * 1000f + aggregateResourceRequirement.ramSize;
-
+        // apart from disk space reuired VDI images we also require to support
+        // RAM hibernation
+        float diskSpaceRequiredOnHost = aggregateResourceRequirement.diskSize * 1000f
+                + aggregateResourceRequirement.ramSize;
+        
         if (currentlySelectedDisk instanceof FileStore) {
             try {
                 if (diskSpaceRequiredOnHost <= (((FileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f
                         / 1024.0f)) {
-                    System.out.println("Disk: " + diskSpaceRequiredOnHost + " <= " + (
-                            ((FileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f));
+                    System.out.println("Disk: " + diskSpaceRequiredOnHost + " <= "
+                            + (((FileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f));
                     return null;
                 }
             } catch (IOException e) {
@@ -255,19 +268,20 @@ public class ResourceController implements Initializable, ControllerHooks {
                 Main.logger.error("IOException", e);
             }
         } else {
-            if (diskSpaceRequiredOnHost <= (((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f)) {
-                System.out.println("Disk: " + diskSpaceRequiredOnHost + " <= " + (
-                        ((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f));
+            if (diskSpaceRequiredOnHost <= (((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f
+                    / 1024.0f)) {
+                System.out.println("Disk: " + diskSpaceRequiredOnHost + " <= "
+                        + (((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f / 1024.0f));
                 return null;
             }
         }
         return diskSpaceRequiredOnHost + " MB of free disk needed\n";
     }
-
+    
     public String ramSizeIsValid(ResourceDescription aggregateResourceRequirement, HardwareAbstractionLayer hal) {
-        //512 MB is a minimum required to run VirtualBox itself
+        // 512 MB is a minimum required to run VirtualBox itself
         float ramRequiredOnHost = aggregateResourceRequirement.ramSize + 512f;
-
+        
         float availableMemoryGB = hal.getMemory().getAvailable() / 1024.0f / 1024.0f / 1024f;
         if (ramRequiredOnHost <= availableMemoryGB * 1000f) {
             System.out.println("RAM: " + ramRequiredOnHost + " <= " + availableMemoryGB * 1000f);
@@ -275,37 +289,38 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return ramRequiredOnHost + " MB of free RAM needed\n";
     }
-
+    
     public String cpuCoresNumIsValid(ResourceDescription aggregateResourceRequirement, HardwareAbstractionLayer hal) {
         long logicalCores = hal.getProcessor().getLogicalProcessorCount();
-        //1 core is a minimum required to run VirtualBox itself
+        // 1 core is a minimum required to run VirtualBox itself
         float coresRequiredOnHost = aggregateResourceRequirement.numberOfCores;
-
+        
         if (coresRequiredOnHost <= logicalCores) {
             System.out.println("CPU: " + coresRequiredOnHost + " <= " + logicalCores);
             return null;
         }
         return "Minimum of " + coresRequiredOnHost + " CPU cores needed\n";
     }
-
+    
     public String isValid(ResourceDescription rdAggregatedRequirement) {
         StringBuilder result = new StringBuilder();
         Boolean isValid = false;
         // get selected resource type and json of that type
         // searchResultResources
-        //ResourceDescription rd = getResourceDescriptionForCurrentlySelectedType();
-
+        // ResourceDescription rd =
+        // getResourceDescriptionForCurrentlySelectedType();
+        
         // validate selection made to resource type json data - disk size, ram
         // and core number.
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
-
+        
         // do validation
-
+        
         if (vBoxInstalledVersion == null) {
             result.append("Please install VirtualBox v" + VBoxManager.MIN_VBOX_VERSION + " or later\n");
         }
-
+        
         if (rdAggregatedRequirement == null) {
             result.append("Select the resource type\n");
         }
@@ -315,22 +330,22 @@ public class ResourceController implements Initializable, ControllerHooks {
         } else {
             currentlySelectedDisk = getCurrentlySelectedDiskMacLin();
         }
-
+        
         if (currentlySelectedDisk == null) {
             result.append("Select the disk\n");
         }
         if (currentlySelectedDisk != null && rdAggregatedRequirement != null && vBoxInstalledVersion != null) {
             if (validateJustResourceType(result, rdAggregatedRequirement, hal, currentlySelectedDisk) == null) {
-                //validation passed
+                // validation passed
                 return null;
             }
         }
         return result.toString();
     }
-
+    
     public StringBuilder validateJustResourceType(StringBuilder result,
-            ResourceDescription aggregatedResourceToValidate,
-            HardwareAbstractionLayer hal, Object currentlySelectedDisk) {
+            ResourceDescription aggregatedResourceToValidate, HardwareAbstractionLayer hal,
+            Object currentlySelectedDisk) {
         // disk check
         String diskSizeIsValid = diskSizeIsValid(aggregatedResourceToValidate, currentlySelectedDisk);
         if (diskSizeIsValid != null) {
@@ -351,17 +366,17 @@ public class ResourceController implements Initializable, ControllerHooks {
         }
         return result;
     }
-
+    
     public void addResource(ActionEvent actionEvent) {
-
-        //get all already added resource to the "provided resources" table
+        
+        // get all already added resource to the "provided resources" table
         ResourceDescription rdAggregatedRequirement = getResourceDescriptionForCurrentlySelectedType();
         for (ResourceItem cr : mc.providerResourcesList) {
             rdAggregatedRequirement = rdAggregatedRequirement.add(cr.rd);
         }
-
+        
         String isValidMsg = isValid(rdAggregatedRequirement);
-
+        
         if (isValidMsg == null) {
             // update resources table
             System.out.println("Valid.");
@@ -373,10 +388,9 @@ public class ResourceController implements Initializable, ControllerHooks {
                 e.printStackTrace();
                 Main.logger.error("IOException", e);
             }
-            mc.providerResourcesList
-                    .add(new ResourceItem(rd.name, rd.descriptionOS, new Integer(rd.numberOfCores).toString(),
-                            new Double(rd.ramSize / 1000.0d).toString() + "GB",
-                            new Double(rd.diskSize).toString() + "GB", selectedDisk, rd));
+            mc.providerResourcesList.add(new ResourceItem(rd.name, rd.descriptionOS,
+                    new Integer(rd.numberOfCores).toString(), new Double(rd.ramSize / 1000.0d).toString() + "GB",
+                    new Double(rd.diskSize).toString() + "GB", selectedDisk, rd));
         } else {
             // show invalid message details
             if (stage != null) {
@@ -386,29 +400,31 @@ public class ResourceController implements Initializable, ControllerHooks {
                 saveButton.setTooltip(errTooltip);
                 errTooltip.setAutoHide(true);
                 Point2D p = saveButton.localToScene(0.0, 0.0);
-                errTooltip
-                        .show(stage, p.getX() + saveButton.getScene().getX() + saveButton.getScene().getWindow().getX(),
-                                p.getY() + saveButton.getScene().getY() + saveButton.getScene().getWindow().getY());
+                errTooltip.show(stage,
+                        p.getX() + saveButton.getScene().getX() + saveButton.getScene().getWindow().getX(),
+                        p.getY() + saveButton.getScene().getY() + saveButton.getScene().getWindow().getY());
             }
         }
     }
-
-    @Override public void close() {
+    
+    @Override
+    public void close() {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         mc.openedAddResourceForms--;
         stage.close();
     }
-
-    @Override public void toFront() {
+    
+    @Override
+    public void toFront() {
         Stage stage = (Stage) rootPane.getScene().getWindow();
         // stage.show();
         stage.toFront();
     }
-
+    
     public void cancel(ActionEvent actionEvent) {
         close();
     }
-
+    
     public void updateTypesList() {
         String currentSearchText = searchResourceType.getText();
         Platform.runLater(() -> {
@@ -416,14 +432,14 @@ public class ResourceController implements Initializable, ControllerHooks {
             filteredResourceTypesBySearchedText.clear();
             for (Asset currentType : resourceTypesFetched.values()) {
                 if (currentType.getAssetOptions().getDescription().toLowerCase()
-                        .contains(currentSearchText.toLowerCase()) || currentType.getSymbol().toLowerCase()
-                        .contains(currentSearchText.toLowerCase())) {
+                        .contains(currentSearchText.toLowerCase())
+                        || currentType.getSymbol().toLowerCase().contains(currentSearchText.toLowerCase())) {
                     filteredResourceTypesBySearchedText.add(currentType);
                 }
             }
-
+            
             // update fx component list with filtered collection
-
+            
             List<String> justResourceTypesNames = new ArrayList<>();
             for (Asset a : filteredResourceTypesBySearchedText) {
                 ResourceDescription rd = new ResourceDescription();
@@ -432,7 +448,8 @@ public class ResourceController implements Initializable, ControllerHooks {
             }
             searchResultResources.setItems(FXCollections.observableList(justResourceTypesNames));
             searchResultResources.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override public void handle(MouseEvent event) {
+                @Override
+                public void handle(MouseEvent event) {
                     ResourceDescription rd = getResourceDescriptionForCurrentlySelectedType();
                     if (rd != null) {
                         resourceDescription.setText(rd.toString());
@@ -441,11 +458,11 @@ public class ResourceController implements Initializable, ControllerHooks {
             });
         });
     }
-
+    
     private long MILLIS_TO_PASS_BETWEEN_KEYS_STROKES = 500L;
     private long inputLocked = 0L;
     private ScheduledThreadPoolExecutor ex = new ScheduledThreadPoolExecutor(1);
-
+    
     public void onSearchResourceInputChange(KeyEvent keyEvent) {
         // String currentSearchText = ((JFXTextField)
         // keyEvent.getSource()).getText() + keyEvent.getCharacter();
@@ -454,16 +471,17 @@ public class ResourceController implements Initializable, ControllerHooks {
             inputLocked = System.currentTimeMillis() + MILLIS_TO_PASS_BETWEEN_KEYS_STROKES;
             // System.out.println(currentSearchText);
             // fetchResourceTypes(currentSearchText, 100);
-
+            
             // start thread that will run once just after input unlocked
             ex.schedule(() -> updateTypesList(), MILLIS_TO_PASS_BETWEEN_KEYS_STROKES, TimeUnit.MILLISECONDS);
         }
     }
-
+    
     private NodeErrorListener mErrorListener = new NodeErrorListener() {
-        @Override public void onError(BaseResponse.Error error) {
+        @Override
+        public void onError(BaseResponse.Error error) {
             System.out.println("onError");
         }
     };
-
+    
 }

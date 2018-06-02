@@ -248,6 +248,11 @@
     <build>
         <testSourceDirectory>test</testSourceDirectory>
         <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>resources/</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -264,7 +269,7 @@
                 <artifactId>formatter-maven-plugin</artifactId>
                 <version>2.7.3</version>
                 <configuration>
-                    <lineEnding>CRLF</lineEnding>
+                    <lineEnding>LF</lineEnding>
                     <directories>
                         <directory>${project.basedir}/src</directory>
                         <directory>${project.basedir}/test</directory>
@@ -272,6 +277,11 @@
                     <excludes>
                         <exclude>**/*.json</exclude>
                         <exclude>**/*.css</exclude>
+                        <!--&lt;!&ndash;<exclude>/cy/**</exclude>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<exclude>/library/**</exclude>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<exclude>/network/**</exclude>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<exclude>/resources/**</exclude>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<exclude>/graphenej/**</exclude>&ndash;&gt;-->
                     </excludes>
                     <encoding>UTF-8</encoding>
                     <configFile>${project.basedir}/code-formating/eclipse-oxige3a-Java-Code-Formatting.xml</configFile>

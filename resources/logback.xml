@@ -9,23 +9,23 @@ http://logback.qos.ch/manual/configuration.html
 <configuration scan="true" scanPeriod="30 seconds" packagingData="true"> 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender"> 
         <file>
-            C:\\repos\\omega-governance-sombero\\today-utc0.log
+             C:\\repos\\omega-governance-sombero\\today-utc0.log 
         </file> 
         <!--<file>daylog.log</file>--> 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"> 
             <!-- rollover daily --> 
             <fileNamePattern>
-                C:\\repos\\omega-governance-sombero\\logs-archive\\%d{yyyy/MM, aux}\\day-utc0-%i-%d{yyyy-MM-dd}.log
+                 C:\\repos\\omega-governance-sombero\\logs-archive\\%d{yyyy/MM, aux}\\day-utc0-%i-%d{yyyy-MM-dd}.log 
             </fileNamePattern> 
             <!-- each file should be at most 100MB, keep 30 days' worth of history capped at 3GB total size --> 
             <maxFileSize>
-                300KB
+                 300KB 
             </maxFileSize> 
             <maxHistory>
-                30
+                 30 
             </maxHistory> 
             <totalSizeCap>
-                3GB
+                 3GB 
             </totalSizeCap> 
         </rollingPolicy> 
         <encoder> 
@@ -39,7 +39,7 @@ http://logback.qos.ch/manual/configuration.html
             http://stackoverflow.com/questions/144807/java-log-viewer
             --> 
             <pattern>
-                %-5level %date{dd MMM yyyy;HH:mm:ss.SSS, UTC} [%thread] %logger %msg%n
+                 %-5level %date{dd MMM yyyy;HH:mm:ss.SSS, UTC} [%thread] %logger %msg%n 
             </pattern> 
         </encoder> 
     </appender> 

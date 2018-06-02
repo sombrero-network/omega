@@ -126,7 +126,7 @@ public class NodeConnectionTest {
         nodeConnection.addNodeUrl(NODE_URL_2);
         nodeConnection.addNodeUrl(NODE_URL_5);
         
-        // bitshare top node list 
+        // bitshare top node list
         nodeConnection.addNodeUrl("wss://eu.openledger.info/ws");
         nodeConnection.addNodeUrl("wss://bitshares.crypto.fans/ws");
         nodeConnection.addNodeUrl("wss://openledger.hk/ws");

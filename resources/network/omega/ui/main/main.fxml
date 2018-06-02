@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -18,9 +19,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<!--stylesheets="@../../../../resources/dark-theme.css"-->
+<!--stylesheets="@/dark-theme.css"-->
 
-<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1000.0" stylesheets="@/dark-theme.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.MainController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="625.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="network.omega.ui.main.MainController">
    <children>
       <JFXDrawer fx:id="drawer" defaultDrawerSize="150.0" resizableOnDrag="true" resizeContent="true" styleClass="jfx-drawer" />
       <AnchorPane fx:id="rootAnchorPane" prefHeight="200.0" prefWidth="200.0">
@@ -58,6 +59,11 @@
                                           </ImageView>
                                        </children>
                                     </HBox>
+                                    <ProgressBar fx:id="providerResourcesProgressBar" prefHeight="25.0" prefWidth="880.0" progress="0.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="95.0" styleClass="green-bar"/>
+                                    <Label fx:id="providerResourcesProgressBarDescr" prefWidth="870.0" styleClass="detailsMessage" text="Downloading huge image" AnchorPane.bottomAnchor="30.5" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="95.0">
+
+                                    </Label>
+
                                      </children>
                                  </AnchorPane>
                              </content>

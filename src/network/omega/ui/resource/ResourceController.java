@@ -21,6 +21,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import network.omega.ui.main.Main;
 import network.omega.ui.main.MainController;
+import network.omega.ui.preferences.ManageLocalStorage;
 import oshi.SystemInfo;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.OSFileStore;
@@ -223,12 +224,17 @@ public class ResourceController implements Initializable, ControllerHooks {
         return null;
     }
     
-    public FileStore getCurrentlySelectedDisk() {
+    public Object getCurrentlySelectedDisk() {
+        Object selectedDisk = null;
         int selectedIndex = disksList.getSelectionModel().getSelectedIndex();
         if (selectedIndex != -1) {
-            FileStore currentStore = currentDisksList.get(selectedIndex);
-            if (currentStore != null) {
-                return currentStore;
+            if (com.sun.jna.Platform.isWindows()) {
+                selectedDisk = currentDisksList.get(selectedIndex);
+            } else {
+                selectedDisk = currentDisksListMacLin.get(selectedIndex);
+            }
+            if (selectedDisk != null) {
+                return selectedDisk;
             } else {
                 return null;
             }
@@ -236,17 +242,37 @@ public class ResourceController implements Initializable, ControllerHooks {
         return null;
     }
     
-    public OSFileStore getCurrentlySelectedDiskMacLin() {
-        int selectedIndex = disksList.getSelectionModel().getSelectedIndex();
-        if (selectedIndex != -1) {
-            OSFileStore currentStore = currentDisksListMacLin.get(selectedIndex);
-            if (currentStore != null) {
-                return currentStore;
-            } else {
-                return null;
+    public String getVMStorageDirAbsolutePath(Object selectedDisk) {
+        String result = null;
+        if (selectedDisk instanceof FileStore) {
+            try {
+                result = getRootPath((FileStore) selectedDisk).toFile().getAbsolutePath();
+                if (result.contentEquals("C:\\")) {
+                    // override to user home path
+                    result = ManageLocalStorage.applicationDir.toFile().getAbsolutePath();
+                } else {
+                    // create new folder at path
+                    result = result + ".omegagovernance";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Main.logger.error("IOException", e);
             }
+        } else {
+            result = ((OSFileStore) selectedDisk).getMount();
+            if (result.length() < 4) {
+                if (ManageLocalStorage.applicationDir.toFile().getAbsolutePath().startsWith(result)) {
+                    result = ManageLocalStorage.applicationDir.toFile().getAbsolutePath();
+                }
+            } else {
+                if (ManageLocalStorage.applicationDir.toFile().getAbsolutePath()
+                        .startsWith(result.substring(0, result.length() - 1))) {
+                    result = ManageLocalStorage.applicationDir.toFile().getAbsolutePath();
+                }
+            }
+            result = result + ".omegagovernance";
         }
-        return null;
+        return result;
     }
     
     public String diskSizeIsValid(ResourceDescription aggregateResourceRequirement, Object currentlySelectedDisk) {
@@ -256,6 +282,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                 + aggregateResourceRequirement.ramSize;
         
         if (currentlySelectedDisk instanceof FileStore) {
+            // windows OS disk
             try {
                 if (diskSpaceRequiredOnHost <= (((FileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f
                         / 1024.0f)) {
@@ -268,6 +295,7 @@ public class ResourceController implements Initializable, ControllerHooks {
                 Main.logger.error("IOException", e);
             }
         } else {
+            // mac or linux OS disk
             if (diskSpaceRequiredOnHost <= (((OSFileStore) currentlySelectedDisk).getUsableSpace() / 1024.0f
                     / 1024.0f)) {
                 System.out.println("Disk: " + diskSpaceRequiredOnHost + " <= "
@@ -324,12 +352,7 @@ public class ResourceController implements Initializable, ControllerHooks {
         if (rdAggregatedRequirement == null) {
             result.append("Select the resource type\n");
         }
-        Object currentlySelectedDisk = null;
-        if (com.sun.jna.Platform.isWindows()) {
-            currentlySelectedDisk = getCurrentlySelectedDisk();
-        } else {
-            currentlySelectedDisk = getCurrentlySelectedDiskMacLin();
-        }
+        Object currentlySelectedDisk = getCurrentlySelectedDisk();
         
         if (currentlySelectedDisk == null) {
             result.append("Select the disk\n");
@@ -381,13 +404,7 @@ public class ResourceController implements Initializable, ControllerHooks {
             // update resources table
             System.out.println("Valid.");
             ResourceDescription rd = getResourceDescriptionForCurrentlySelectedType();
-            String selectedDisk = "";
-            try {
-                selectedDisk = getRootPath(getCurrentlySelectedDisk()).toFile().getAbsolutePath();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Main.logger.error("IOException", e);
-            }
+            String selectedDisk = getVMStorageDirAbsolutePath(getCurrentlySelectedDisk());
             mc.providerResourcesList.add(new ResourceItem(rd.name, rd.descriptionOS,
                     new Integer(rd.numberOfCores).toString(), new Double(rd.ramSize / 1000.0d).toString() + "GB",
                     new Double(rd.diskSize).toString() + "GB", selectedDisk, rd));

@@ -37,5 +37,10 @@
     "r": "1GB",
     //minimal cpu cores number
     "c": "2"
+  },
+  //vm image settings
+  "i": {
+    //torrent file URL
+    "t": "https://testnet.sombrero.network/images/ubuntu_16.04_x64_server.torrent"
   }
 }

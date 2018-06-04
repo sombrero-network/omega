@@ -13,6 +13,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
 
 public class ResourceLauncher {
+    ProgressBar pb;
+    Label description;
+    
+    public String getCurrentDescription() {
+        return description.getText();
+    }
     
     private void runTask(Future<String> result, Callable<String> t, ExecutorService es, Label description)
             throws ExecutionException, InterruptedException {
@@ -25,7 +31,7 @@ public class ResourceLauncher {
         }
     }
     
-    private void setDescription(ProgressBar pb, Label description, Boolean isVisible, String descr) {
+    public void setDescription(Boolean isVisible, String descr) {
         Platform.runLater(() -> {
             description.setText(descr);
             pb.setVisible(isVisible);
@@ -44,6 +50,8 @@ public class ResourceLauncher {
     
     public void launchResources(ProgressBar pb, Label description, List<ResourceItem> selectedResources)
             throws ExecutionException, InterruptedException {
+        this.description = description;
+        this.pb = pb;
         
         final AtomicDouble totalWorkSteps = new AtomicDouble(4.0);
         final AtomicDouble currentProgress = new AtomicDouble(0.0);
@@ -57,32 +65,32 @@ public class ResourceLauncher {
         });
         
         // download torrent image
-        setDescription(pb, description, true, "Downloading images...");
-        DownloadImage t1 = new DownloadImage(selectedResources);
+        setDescription(true, "Downloading");
+        DownloadImage t1 = new DownloadImage(selectedResources, this);
         runTask(result, t1, es, description);
         updateProgressAfterStepCompleted(pb, currentProgress, totalWorkSteps);
         
         // start virtualbox image
-        setDescription(pb, description, true, "Starting images...");
+        setDescription(true, "Starting images...");
         StartImage t2 = new StartImage();
         runTask(result, t2, es, description);
         updateProgressAfterStepCompleted(pb, currentProgress, totalWorkSteps);
         
         // start validate image by running validator inside running VM
-        setDescription(pb, description, true, "Validating images...");
+        setDescription(true, "Validating images...");
         ValidateImage t3 = new ValidateImage();
         runTask(result, t3, es, description);
         updateProgressAfterStepCompleted(pb, currentProgress, totalWorkSteps);
         
         // hibernate VM's RAM into file
-        setDescription(pb, description, true, "Hibernating images...");
+        setDescription(true, "Hibernating images...");
         SuspendImage t4 = new SuspendImage();
         runTask(result, t4, es, description);
         updateProgressAfterStepCompleted(pb, currentProgress, totalWorkSteps);
         
         es.shutdown();
         
-        setDescription(pb, description, false, "");
+        setDescription(false, "");
     }
     
     public void deleteResourcesWithImages() {

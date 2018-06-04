@@ -34,6 +34,9 @@ public class ResourceDescription {
     // min cpu cores
     public int minCPUCoresRequired;
     
+    // base torrent VDI image
+    public String baseVDITorrentUrl;
+    
     private String clean(String source) {
         return source.toLowerCase().replace("mb", "").replace("mbs", "").replace("gb", "").replace("s", "");
     }
@@ -76,6 +79,8 @@ public class ResourceDescription {
             freeDiskRequired = readJsonLineFloat(mainJsonObj, "h", "s");
             freeRamRequired = readJsonLineFloat(mainJsonObj, "h", "r");
             minCPUCoresRequired = readJsonLineInt(mainJsonObj, "h", "c");
+            
+            baseVDITorrentUrl = readJsonLineString(mainJsonObj, "de", "i");
             // System.out.println(this.toString());
             // System.out.println();
             name = descriptionOS + " - " + a.getSymbol().replace("RESOURCE", "");

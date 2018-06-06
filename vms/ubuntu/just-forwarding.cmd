@@ -1,0 +1,2 @@
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet3 --port-forward-4 "ssh:tcp:[]:30001:[192.168.15.4]:22"
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 "ssh:tcp:[]:30002:[192.168.15.5]:22"

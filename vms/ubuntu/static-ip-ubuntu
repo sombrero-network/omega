@@ -1,0 +1,44 @@
+#to set static IP just edit interface file with correct setting for interface
+sudo nano /etc/network/interfaces
+#https://www.virtualbox.org/manual/ch06.html#network_nat_service
+#Gateway is 192.168.15.1 but subject to change
+
+### Start IPV6 static configuration
+iface enp0s3 inet6 static
+address fd17:625c:f037:a80f:a00:27ff:fe4c:92ba
+netmask 64
+gateway fe80::a00:27ff:fe4c:92ba
+### END IPV6 configuration
+
+allow-hotplug enp0s3
+iface enp0s3 inet static
+address 192.168.15.4
+netmask 255.255.255.0
+gateway 192.168.15.1
+dns-nameservers 8.8.4.4 8.8.8.8
+
+#different hacking around network interface settings just to keep
+sudo nano /etc/udev/rules.d/10-rename-network.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="08:00:27:4C:92:BA", NAME="enp0s3"
+touch /etc/network/interfaces.d/enp0s3
+sudo ifdown enp0s3 && sudo ifup enp0s3
+sudo update-initramfs -u
+sudo nano /etc/systemd/system/network-online.target.wants/networking.service
+#TimeoutStartSec=5min
+sudo nano /etc/dhcp/dhclient.conf
+#timeout 15
+sudo systemctl daemon-reload
+systemd-analyze blame
+sudo systemctl restart networking
+sudo systemctl restart networking.service
+sudo ip addr flush enp0s3
+
+#Install VirtualBox Linux Guest Additions
+sudo apt-get install bridge-utils
+sudo apt-get install build-essential linux-headers-`uname -r` dkms
+#attache virtualbox cdrom - Devices / Insert Guest..
+sudo mount /dev/cdrom /media/cdrom
+cd /media/cdrom
+./VBoxLinuxAdditions.run
+#following modules don't exist though used some how
+sudo modprobe -a vboxdrv vboxnetadp vboxnetflt vboxpci

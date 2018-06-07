@@ -41,16 +41,19 @@ rem once machine was added to vbox after download with its uuid; create a clone 
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" unregistervm ubuntu_16.04_x64-1 --delete
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" clonevm ubuntu_16.04_x64 --name ubuntu_16.04_x64-1 --basefolder "C:\repos\omega-governance-sombero\vms\ubuntu-1" --register
 
-rem set networking nat for cloned vm
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyvm ubuntu_16.04_x64 --nat-network1 natnet3
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyvm ubuntu_16.04_x64-1 --nat-network1 natnet2
 
-rem configure sshd binding on host
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet3 --port-forward-4 "ssh:tcp:[]:30001:[192.168.15.4]:22"
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet3 --port-forward-4 "ssh1:tcp:[]:30001:[192.168.15.5]:22"
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 "ssh:tcp:[]:30002:[192.168.15.4]:22"
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 "ssh1:tcp:[]:30002:[192.168.15.5]:22"
+rem set networking nat for cloned vm
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyvm ubuntu_16.04_x64 --nat-network1 natnet1
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyvm ubuntu_16.04_x64-1 --nat-network1 natnet2
 
 rem start the machines
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" startvm ubuntu_16.04_x64
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" startvm ubuntu_16.04_x64-1
+
+rem configure sshd binding on host
+rem https://www.virtualbox.org/manual/ch06.html#network_nat_service
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet1 --port-forward-4 "ssh:tcp:[]:30001:[192.168.15.4]:22"
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 "ssh:tcp:[]:30002:[192.168.15.4]:22"
+
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet1 --port-forward-4 delete ssh
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 delete ssh

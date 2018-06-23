@@ -253,8 +253,8 @@
         <dependency>
             <groupId>com.turn</groupId>
             <artifactId>ttorrent-core</artifactId>
-            <!--<version>1.5</version>-->
-            <version>1.6-SNAPSHOT</version>
+            <version>1.5</version>
+            <!--<version>1.6-SNAPSHOT</version>-->
         </dependency>
 
         <dependency>

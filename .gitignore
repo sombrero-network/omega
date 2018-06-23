@@ -13,3 +13,6 @@
 /lib/sdk/
 /*.log
 /logs-archive/**
+*.vdi
+*.vbox-prev
+*.log

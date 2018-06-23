@@ -248,7 +248,14 @@
         <dependency>
             <groupId>com.turn</groupId>
             <artifactId>ttorrent-core</artifactId>
-            <version>1.5</version>
+            <!--<version>1.5</version>-->
+            <version>1.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.frostwire</groupId>
+            <artifactId>jlibtorrent</artifactId>
+            <version>1.2.0.16</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
@@ -257,6 +264,7 @@
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
+
 
 
     </dependencies>

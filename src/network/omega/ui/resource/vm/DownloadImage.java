@@ -50,19 +50,25 @@ public class DownloadImage implements Callable<String> {
             System.out.println(resFilesRoot);
             // download the torrent file
             // http://releases.ubuntu.com/16.04/ubuntu-16.04.4-desktop-amd64.iso.torrent
-            URL torrentUrl = new URL("http://releases.ubuntu.com/16.04/ubuntu-16.04.4-desktop-amd64.iso.torrent");
+            String torrentsURL = "http://199.247.21.211/torrents/";
+            //String torrentsURL = "http://releases.ubuntu.com/16.04/";
+            //String torrentFileName = "jdk-8u171-windows-x64.exe.torrent";
+            //String torrentFileName = "ubuntu-16.04.4-desktop-amd64.iso.torrent";
+            String torrentFileName = "ubuntu-16.04-x64.torrent";
+            URL torrentUrl = new URL(torrentsURL + torrentFileName);
             String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36";
             URLConnection conn = torrentUrl.openConnection();
             conn.setRequestProperty("User-Agent", USER_AGENT);
             InputStream is = conn.getInputStream();
             File torrentFile = new File(
-                    resFilesRoot.getAbsolutePath() + File.separator + "ubuntu-16.04.4-desktop-amd64.iso.torrent");
+                    resFilesRoot.getAbsolutePath() + File.separator + torrentFileName);
             FileUtils.copyInputStreamToFile(is, torrentFile);
             is.close();
             
             // start torrent
             Client client = new Client(InetAddress.getLocalHost(),
                     SharedTorrent.fromFile(torrentFile, new File(resFilesRoot.getAbsolutePath())));
+            //client.share();
             client.addObserver(new Observer() {
                 @Override
                 public void update(Observable observable, Object data) {

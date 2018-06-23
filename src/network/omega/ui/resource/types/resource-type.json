@@ -41,6 +41,6 @@
   //vm image settings
   "i": {
     //torrent file URL
-    "t": "https://testnet.sombrero.network/images/ubuntu_16.04_x64_server.torrent"
+    "t": "http://199.247.21.211/torrents/ubuntu-16.04-x64.torrent"
   }
 }

@@ -54,6 +54,3 @@ rem configure sshd binding on host
 rem https://www.virtualbox.org/manual/ch06.html#network_nat_service
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet1 --port-forward-4 "ssh:tcp:[]:30001:[192.168.15.4]:22"
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 "ssh:tcp:[]:30002:[192.168.15.4]:22"
-
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet1 --port-forward-4 delete ssh
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" natnetwork modify --netname natnet2 --port-forward-4 delete ssh
